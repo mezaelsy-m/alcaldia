@@ -666,9 +666,60 @@ class Configuracion
 
     private function normalizarTextoComparable($texto)
     {
-        $texto = strtoupper(trim((string) $texto));
+        $texto = trim((string) $texto);
         if ($texto === "") {
             return "";
+        }
+
+        $texto = strtr($texto, array(
+            "á" => "a",
+            "à" => "a",
+            "ä" => "a",
+            "â" => "a",
+            "Á" => "A",
+            "À" => "A",
+            "Ä" => "A",
+            "Â" => "A",
+            "é" => "e",
+            "è" => "e",
+            "ë" => "e",
+            "ê" => "e",
+            "É" => "E",
+            "È" => "E",
+            "Ë" => "E",
+            "Ê" => "E",
+            "í" => "i",
+            "ì" => "i",
+            "ï" => "i",
+            "î" => "i",
+            "Í" => "I",
+            "Ì" => "I",
+            "Ï" => "I",
+            "Î" => "I",
+            "ó" => "o",
+            "ò" => "o",
+            "ö" => "o",
+            "ô" => "o",
+            "Ó" => "O",
+            "Ò" => "O",
+            "Ö" => "O",
+            "Ô" => "O",
+            "ú" => "u",
+            "ù" => "u",
+            "ü" => "u",
+            "û" => "u",
+            "Ú" => "U",
+            "Ù" => "U",
+            "Ü" => "U",
+            "Û" => "U",
+            "ñ" => "n",
+            "Ñ" => "N"
+        ));
+
+        if (function_exists("mb_strtoupper")) {
+            $texto = mb_strtoupper($texto, "UTF-8");
+        } else {
+            $texto = strtoupper($texto);
         }
 
         $texto = strtr($texto, array(
@@ -694,6 +745,8 @@ class Configuracion
             "Û" => "U",
             "Ñ" => "N"
         ));
+
+        $texto = preg_replace('/[^A-Z0-9 ]+/u', ' ', $texto);
         $texto = preg_replace('/\s+/', ' ', $texto);
         return trim((string) $texto);
     }
@@ -706,10 +759,37 @@ class Configuracion
     private function mensajeRegistroProtegido($config, $row = null)
     {
         if (isset($config["key"]) && (string) $config["key"] === "dependencias") {
-            return "La dependencia Direccion General es base del sistema y no puede modificarse ni desactivarse.";
+            return "La dependencia Direccion General es base del sistema y no puede modificarse ni eliminarse.";
         }
 
         return "Este registro es base del sistema y no puede desactivarse.";
+    }
+
+    private function obtenerIdDependenciaDireccionGeneral($excludeId = 0)
+    {
+        if (!$this->existeTabla("dependencias")) {
+            return 0;
+        }
+
+        $sql = "SELECT id_dependencia, nombre_dependencia
+                FROM dependencias";
+        if ((int) $excludeId > 0) {
+            $sql .= " WHERE id_dependencia <> '" . (int) $excludeId . "'";
+        }
+
+        $rspta = ejecutarConsulta($sql);
+        if (!$rspta) {
+            return 0;
+        }
+
+        while ($row = $rspta->fetch_assoc()) {
+            $nombre = isset($row["nombre_dependencia"]) ? $row["nombre_dependencia"] : "";
+            if ($this->esNombreDependenciaDireccionGeneral($nombre)) {
+                return isset($row["id_dependencia"]) ? (int) $row["id_dependencia"] : 0;
+            }
+        }
+
+        return 0;
     }
 
     private function registroProtegidoBloqueaEdicionCompleta($config, $row = null)
@@ -954,6 +1034,7 @@ class Configuracion
         }
 
         $payload = $validacion["data"];
+        $esCatalogoDependencias = isset($config["key"]) && (string) $config["key"] === "dependencias";
         $conexion = $this->db();
         $pk = $config["pk"];
         $tabla = $config["table"];
@@ -962,6 +1043,17 @@ class Configuracion
         $conexion->begin_transaction();
 
         try {
+            if (
+                $esCatalogoDependencias &&
+                isset($payload["nombre_dependencia"]) &&
+                $this->esNombreDependenciaDireccionGeneral($payload["nombre_dependencia"])
+            ) {
+                $idBaseExistente = $this->obtenerIdDependenciaDireccionGeneral($idRegistro);
+                if ($idBaseExistente > 0) {
+                    throw new Exception("La dependencia Direccion General ya existe y es unica en el sistema.");
+                }
+            }
+
             if ($idRegistro > 0) {
                 $actual = $this->obtenerRegistroPorId($config, $idRegistro, true);
                 if (!$actual) {
@@ -1143,6 +1235,10 @@ class Configuracion
             $row = $this->obtenerRegistroPorId($config, $idRegistro, true);
             if (!$row) {
                 throw new Exception("Registro no encontrado.");
+            }
+
+            if ($this->esRegistroProtegido($config, $row)) {
+                throw new Exception($this->mensajeRegistroProtegido($config, $row));
             }
 
             if ((int) $row[$config["state_field"]] === 1) {

@@ -63,6 +63,9 @@ $menuItems = array(
 );
 
 $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders-h", "label" => "Configuracion");
+$bottomAllowed = (isset($_SESSION["Concepto"]) && (int) $_SESSION["Concepto"] === 1)
+    || (isset($_SESSION["Usuarios"]) && (int) $_SESSION["Usuarios"] === 1)
+    || (isset($_SESSION["Tribunal"]) && (int) $_SESSION["Tribunal"] === 1);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -138,7 +141,7 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
             </a>
 
             <div class="sidebar">
-                <div class="sidebar-user-card mt-5">
+                <div class="sidebar-user-card">
                     <div class="sidebar-user-avatar">
                         <i class="fas fa-user-shield" aria-hidden="true"></i>
                     </div>
@@ -154,6 +157,19 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
                     <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview"
                         role="menu" data-accordion="false">
                         <?php
+          if ($bottomAllowed) {
+              $bottomActiveMobile = $currentPage === $bottomMenuItem["href"];
+              ?>
+                        <li class="nav-item d-lg-none">
+                            <a href="<?php echo htmlspecialchars($bottomMenuItem["href"], ENT_QUOTES, "UTF-8"); ?>"
+                                class="nav-link<?php echo $bottomActiveMobile ? " active" : ""; ?>">
+                                <i
+                                    class="nav-icon <?php echo htmlspecialchars($bottomMenuItem["icon"], ENT_QUOTES, "UTF-8"); ?>"></i>
+                                <p><?php echo htmlspecialchars($bottomMenuItem["label"], ENT_QUOTES, "UTF-8"); ?></p>
+                            </a>
+                        </li>
+                        <?php
+          }
           $visibleItems = 0;
           foreach ($menuItems as $item) {
               $isAllowed = isset($_SESSION[$item["perm"]]) && (int) $_SESSION[$item["perm"]] === 1;
@@ -189,9 +205,6 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
             </div>
 
             <?php
-      $bottomAllowed = (isset($_SESSION["Concepto"]) && (int) $_SESSION["Concepto"] === 1)
-          || (isset($_SESSION["Usuarios"]) && (int) $_SESSION["Usuarios"] === 1)
-          || (isset($_SESSION["Tribunal"]) && (int) $_SESSION["Tribunal"] === 1);
       if ($bottomAllowed) {
           $bottomActive = $currentPage === $bottomMenuItem["href"];
           ?>

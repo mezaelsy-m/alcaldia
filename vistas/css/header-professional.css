@@ -425,6 +425,10 @@
     margin-top: 2px;
     font-size: 0.78rem;
   }
+
+  .sidebar-bottom-slot {
+    display: none;
+  }
 }
 
 @media (max-width: 575.98px) {

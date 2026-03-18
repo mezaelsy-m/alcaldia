@@ -794,11 +794,14 @@ function renderizarAccionesFilaConfiguracion(catalogo, fila) {
             '<i class="fas fa-trash-alt"></i></button>'
         );
     } else {
+        const reactivarBloqueado = !!fila.registro_protegido;
+        const tituloReactivar = reactivarBloqueado ? (fila.motivo_bloqueo || "Registro protegido") : "Reactivar";
+        const disabledReactivar = reactivarBloqueado ? " disabled" : "";
         botones.push(
             '<button type="button" class="btn btn-sm btn-outline-success js-config-reactivar" data-catalogo="' +
             escapeAttrConfiguracion(catalogo.key) +
             '" data-id="' + escapeAttrConfiguracion(idRegistro) +
-            '" title="Reactivar"><i class="fas fa-undo"></i></button>'
+            '" title="' + escapeAttrConfiguracion(tituloReactivar) + '"' + disabledReactivar + '><i class="fas fa-undo"></i></button>'
         );
     }
 
