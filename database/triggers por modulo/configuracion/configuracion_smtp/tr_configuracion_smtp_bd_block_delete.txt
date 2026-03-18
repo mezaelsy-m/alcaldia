@@ -1,0 +1,11 @@
+Explica: trigger BEFORE DELETE sobre la tabla configuracion_smtp.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_configuracion_smtp_bd_block_delete//
+CREATE TRIGGER tr_configuracion_smtp_bd_block_delete BEFORE DELETE ON configuracion_smtp
+FOR EACH ROW
+BEGIN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Eliminacion fisica bloqueada en tabla configuracion_smtp. Use eliminacion logica.';
+END
+//
+DELIMITER ;

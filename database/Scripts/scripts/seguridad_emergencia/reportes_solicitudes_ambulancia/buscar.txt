@@ -1,0 +1,35 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_reporte_solicitud,
+       id_seguridad,
+       id_despacho_unidad,
+       tipo_reporte,
+       nombre_archivo,
+       ruta_archivo,
+       estado_envio,
+       correo_destino,
+       fecha_envio,
+       detalle_envio,
+       id_usuario_genera,
+       fecha_generacion,
+       estado
+FROM reportes_solicitudes_ambulancia
+WHERE id_reporte_solicitud = ?;
+
+SQL (listado):
+SELECT id_reporte_solicitud,
+       id_seguridad,
+       id_despacho_unidad,
+       tipo_reporte,
+       nombre_archivo,
+       ruta_archivo,
+       estado_envio,
+       correo_destino,
+       fecha_envio,
+       detalle_envio,
+       id_usuario_genera,
+       fecha_generacion,
+       estado
+FROM reportes_solicitudes_ambulancia
+WHERE estado = 1
+ORDER BY id_reporte_solicitud DESC;

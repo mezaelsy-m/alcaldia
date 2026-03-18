@@ -1,0 +1,11 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO estados_solicitudes (
+    codigo_estado,
+    nombre_estado,
+    descripcion,
+    clase_badge,
+    es_atendida,
+    orden_visual,
+    estado
+) VALUES (?, ?, ?, ?, ?, ?, ?);

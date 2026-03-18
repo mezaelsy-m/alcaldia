@@ -1,0 +1,4 @@
+Explica: la tabla no usa campo de eliminacion logica y el DELETE fisico esta bloqueado por trigger.
+SQL (bloqueado por trigger):
+DELETE FROM usuarios_seguridad_acceso
+WHERE id_usuario = ?;

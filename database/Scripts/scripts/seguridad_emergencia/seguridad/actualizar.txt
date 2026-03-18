@@ -1,0 +1,18 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE seguridad
+SET ticket_interno = ?,
+    id_beneficiario = ?,
+    id_usuario = ?,
+    id_tipo_seguridad = ?,
+    id_solicitud_seguridad = ?,
+    id_estado_solicitud = ?,
+    tipo_seguridad = ?,
+    tipo_solicitud = ?,
+    fecha_seguridad = ?,
+    descripcion = ?,
+    estado_atencion = ?,
+    ubicacion_evento = ?,
+    referencia_evento = ?,
+    estado = ?
+WHERE id_seguridad = ?;

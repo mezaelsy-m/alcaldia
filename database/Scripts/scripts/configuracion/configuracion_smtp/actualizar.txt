@@ -1,0 +1,15 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE configuracion_smtp
+SET host = ?,
+    puerto = ?,
+    usuario = ?,
+    clave = ?,
+    correo_remitente = ?,
+    nombre_remitente = ?,
+    usar_tls = ?,
+    estado = ?,
+    id_usuario_actualiza = ?,
+    fecha_registro = ?,
+    fecha_actualizacion = ?
+WHERE id_configuracion_smtp = ?;

@@ -1,0 +1,8 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE tipos_servicios_publicos
+SET codigo_tipo_servicio_publico = ?,
+    nombre_tipo_servicio = ?,
+    estado = ?,
+    fecha_registro = ?
+WHERE id_tipo_servicio_publico = ?;

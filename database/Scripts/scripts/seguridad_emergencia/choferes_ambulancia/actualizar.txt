@@ -1,0 +1,14 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE choferes_ambulancia
+SET id_empleado = ?,
+    numero_licencia = ?,
+    categoria_licencia = ?,
+    vencimiento_licencia = ?,
+    contacto_emergencia = ?,
+    telefono_contacto_emergencia = ?,
+    observaciones = ?,
+    estado = ?,
+    fecha_registro = ?,
+    fecha_actualizacion = ?
+WHERE id_chofer_ambulancia = ?;

@@ -1,0 +1,7 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO permisos (
+    nombre_permiso,
+    descripcion,
+    estado
+) VALUES (?, ?, ?);

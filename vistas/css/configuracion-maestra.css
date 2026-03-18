@@ -1,0 +1,624 @@
+.config-master-shell {
+    border: 1px solid #d9e3ee;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(16, 37, 56, 0.08);
+}
+
+.config-hub-switcher {
+    border: 1px solid #d9e3ee;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #fbfdff 0%, #f4f8fb 100%);
+    box-shadow: 0 10px 28px rgba(16, 37, 56, 0.05);
+    padding: 10px 12px 0;
+}
+
+.config-hub-tabs {
+    border-bottom: 0;
+    gap: 8px;
+}
+
+.config-hub-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    color: #27445d;
+    background: transparent;
+    font-weight: 700;
+    padding: 11px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.config-hub-tabs .nav-link:hover,
+.config-hub-tabs .nav-link:focus {
+    background: #edf4fa;
+    border-color: #d8e3ee;
+    color: #143650;
+}
+
+.config-hub-tabs .nav-link.active {
+    background: #ffffff;
+    border-color: #d8e3ee;
+    color: #143650;
+    box-shadow: 0 -4px 14px rgba(16, 37, 56, 0.05);
+}
+
+.config-master-shell .card-header {
+    background: linear-gradient(180deg, #fbfdff 0%, #f3f7fb 100%);
+    border-bottom: 1px solid #dde6ef;
+}
+
+.config-master-shell .card-title {
+    font-weight: 700;
+    margin: 0;
+}
+
+.config-master-shell .card-tools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    gap: 8px;
+}
+
+.config-master-shell .card-tools .btn {
+    border-radius: 10px;
+}
+
+.config-master-overview-card {
+    border: 1px solid #dbe4ef;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%);
+    box-shadow: 0 6px 18px rgba(16, 37, 56, 0.06);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 100%;
+}
+
+.config-master-overview-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #163852 0%, #2a5a7b 100%);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 18px rgba(21, 50, 75, 0.18);
+}
+
+.config-master-overview-card .eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #71849b;
+}
+
+.config-master-overview-card h4 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #12344c;
+}
+
+.config-master-overview-card p:last-child {
+    margin: 0;
+    color: #5f7487;
+    font-size: 0.9rem;
+}
+
+.config-master-sidebar {
+    background: linear-gradient(180deg, #fbfdff 0%, #f5f8fb 100%);
+}
+
+.config-master-sidebar-head {
+    margin-bottom: 18px;
+}
+
+.config-master-sidebar-head .eyebrow {
+    margin: 0 0 5px;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6d8094;
+}
+
+.config-master-sidebar-head h4 {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #133652;
+}
+
+.config-master-sidebar-head p {
+    margin: 0;
+    color: #617488;
+}
+
+.config-master-nav .nav-link {
+    border-radius: 14px;
+    border: 1px solid transparent;
+    color: #29465d;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.config-master-nav .nav-link:hover {
+    background: #eef4f9;
+    border-color: #d7e2ec;
+    color: #173953;
+}
+
+.config-master-nav .nav-link.active {
+    background: linear-gradient(135deg, #143650 0%, #2b5b7e 100%);
+    color: #ffffff;
+    box-shadow: 0 12px 24px rgba(19, 54, 82, 0.2);
+}
+
+.config-master-nav .nav-link i {
+    width: 18px;
+    text-align: center;
+}
+
+.config-master-nav-copy {
+    min-width: 0;
+}
+
+.config-master-nav-copy strong {
+    display: block;
+    font-size: 0.94rem;
+    font-weight: 700;
+}
+
+.config-master-nav-copy span {
+    display: block;
+    font-size: 0.82rem;
+    opacity: 0.82;
+}
+
+.config-master-nav-badge {
+    margin-left: auto;
+    min-width: 32px;
+    border-radius: 999px;
+    background: rgba(19, 54, 82, 0.08);
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.config-master-nav .nav-link.active .config-master-nav-badge {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.config-master-group-head {
+    margin-bottom: 18px;
+}
+
+.config-master-group-head h3 {
+    margin: 0 0 6px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #16324a;
+}
+
+.config-master-group-head p {
+    margin: 0;
+    color: #617488;
+}
+
+.config-master-card {
+    border: 1px solid #dde6ef;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(16, 37, 56, 0.06);
+}
+
+.config-master-card .card-header {
+    background: #f8fbfe;
+    border-bottom: 1px solid #dde6ef;
+}
+
+.config-master-card-header {
+    row-gap: 8px;
+}
+
+.config-master-card-copy {
+    flex: 1 1 420px;
+    min-width: 0;
+    padding-right: 12px;
+}
+
+.config-master-card .card-title {
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.config-master-card .card-subtitle {
+    margin: 0;
+    color: #6b7d90;
+    font-size: 0.9rem;
+}
+
+.config-users-shell .card-subtitle {
+    margin-top: 4px;
+}
+
+.config-master-card .card-tools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.config-master-card .card-tools .btn {
+    border-radius: 10px;
+}
+
+.config-master-card .dataTables_filter {
+    display: none;
+}
+
+.config-master-card .dataTables_length {
+    margin: 0;
+}
+
+.config-master-card .dataTables_length label {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 4px;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.config-master-card .dataTables_length select {
+    min-width: 74px;
+    border-radius: 8px;
+    border: 1px solid #cad8e8;
+}
+
+.config-master-card .form-control,
+.config-master-card .input-group-text,
+.config-master-modal .form-control {
+    border-radius: 10px;
+}
+
+.config-master-state-filter {
+    gap: 0;
+    border: 1px solid #cfd9e5;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.config-master-state-filter .btn {
+    border-radius: 0 !important;
+    min-width: 88px;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.config-master-state-filter .btn + .btn {
+    border-left: 1px solid #d7e1ec !important;
+}
+
+.config-master-state-filter .btn:first-child {
+    border-top-left-radius: 999px !important;
+    border-bottom-left-radius: 999px !important;
+}
+
+.config-master-state-filter .btn:last-child {
+    border-top-right-radius: 999px !important;
+    border-bottom-right-radius: 999px !important;
+}
+
+.config-master-browser-tabs {
+    border-bottom: 1px solid #dbe4ee;
+    margin-bottom: 16px;
+    gap: 6px;
+}
+
+.config-master-browser-tabs .nav-link {
+    border: 1px solid transparent;
+    border-bottom: 0;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    color: #315067;
+    font-weight: 600;
+    padding: 10px 14px;
+    background: transparent;
+}
+
+.config-master-browser-tabs .nav-link:hover,
+.config-master-browser-tabs .nav-link:focus {
+    background: #f3f7fb;
+    border-color: #d9e3ee;
+    color: #173953;
+}
+
+.config-master-browser-tabs .nav-link.active {
+    background: #ffffff;
+    color: #143650;
+    border-color: #d9e3ee;
+    box-shadow: 0 -6px 14px rgba(16, 37, 56, 0.05);
+}
+
+.config-master-browser-content {
+    padding-top: 4px;
+}
+
+.config-master-card-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.config-user-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.config-user-cell strong {
+    color: #15344d;
+    font-size: 0.92rem;
+}
+
+.config-user-cell span {
+    color: #6a7f91;
+    font-size: 0.8rem;
+}
+
+.config-permissions-inline {
+    color: #4f6579;
+    font-size: 0.86rem;
+}
+
+.config-user-special-access {
+    margin-top: 8px;
+    border: 1px solid #d8e3ee;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fbfdff 0%, #f5f8fb 100%);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.config-user-special-copy .eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6e8297;
+}
+
+.config-user-special-copy h6 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #16324a;
+}
+
+.config-user-special-copy p:last-child {
+    margin: 0;
+    color: #5f7487;
+}
+
+.config-user-special-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.status-pill {
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.status-pill.active {
+    background: #d9f6e8;
+    color: #0f6b43;
+}
+
+.status-pill.inactive {
+    background: #ffe8d8;
+    color: #9a4816;
+}
+
+.status-pill.draft {
+    background: #e8eef5;
+    color: #486176;
+}
+
+.status-pill.info {
+    background: #d8edff;
+    color: #0d5f92;
+}
+
+.status-pill.warning {
+    background: #fff2d8;
+    color: #8a5a00;
+}
+
+.status-pill.danger {
+    background: #ffe1e0;
+    color: #a1271e;
+}
+
+.status-pill.secondary {
+    background: #eceff3;
+    color: #566779;
+}
+
+.config-master-table th.config-align-right,
+.config-master-table td.config-align-right {
+    text-align: right;
+}
+
+.config-master-actions {
+    gap: 0.35rem;
+}
+
+.config-master-empty {
+    min-height: 260px;
+    border: 1px dashed #d7e2ec;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7d90;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbfe 100%);
+}
+
+.config-master-modal .modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #dfe7ef;
+    box-shadow: 0 18px 40px rgba(16, 37, 56, 0.12);
+}
+
+.config-master-modal .modal-header {
+    background: #f8fbfe;
+    border-bottom: 1px solid #dde6ef;
+}
+
+.config-master-modal .modal-title {
+    font-weight: 700;
+}
+
+.config-master-modal .modal-help {
+    margin-top: 6px;
+    color: #6a7d90;
+    font-size: 0.82rem;
+}
+
+.config-master-modal .field-locked {
+    background: #eef3f8;
+}
+
+.icon-only-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.config-master-loading {
+    position: relative;
+    min-height: 220px;
+}
+
+.config-master-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.config-smtp-shell .card-subtitle {
+    margin-top: 4px;
+}
+
+#smtpConfiguracionNotice {
+    margin-bottom: 14px;
+}
+
+#btnEnviarPruebaSmtp {
+    min-height: 38px;
+}
+
+@media (max-width: 991.98px) {
+    .config-master-sidebar {
+        border-bottom: 1px solid #dde6ef;
+    }
+
+    .config-user-special-access {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .config-user-special-actions {
+        margin-left: 0;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .config-master-card .card-tools,
+    .config-master-shell .card-tools {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .config-hub-switcher {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .config-hub-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 6px;
+    }
+
+    .config-hub-tabs .nav-link {
+        white-space: nowrap;
+    }
+
+    .config-master-overview-card {
+        align-items: flex-start;
+    }
+
+    .config-master-card .dataTables_length label {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .config-master-state-filter {
+        width: 100%;
+        display: flex;
+    }
+
+    .config-master-state-filter .btn {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .config-master-browser-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 4px;
+    }
+}

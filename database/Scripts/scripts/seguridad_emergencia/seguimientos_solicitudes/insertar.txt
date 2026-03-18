@@ -1,0 +1,11 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO seguimientos_solicitudes (
+    modulo,
+    id_referencia,
+    id_estado_solicitud,
+    id_usuario,
+    fecha_gestion,
+    observacion,
+    estado
+) VALUES (?, ?, ?, ?, ?, ?, ?);

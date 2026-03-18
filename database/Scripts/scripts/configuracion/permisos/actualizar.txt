@@ -1,0 +1,7 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE permisos
+SET nombre_permiso = ?,
+    descripcion = ?,
+    estado = ?
+WHERE id_permiso = ?;

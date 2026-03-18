@@ -1,0 +1,39 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_seguridad,
+       ticket_interno,
+       id_beneficiario,
+       id_usuario,
+       id_tipo_seguridad,
+       id_solicitud_seguridad,
+       id_estado_solicitud,
+       tipo_seguridad,
+       tipo_solicitud,
+       fecha_seguridad,
+       descripcion,
+       estado_atencion,
+       ubicacion_evento,
+       referencia_evento,
+       estado
+FROM seguridad
+WHERE id_seguridad = ?;
+
+SQL (listado):
+SELECT id_seguridad,
+       ticket_interno,
+       id_beneficiario,
+       id_usuario,
+       id_tipo_seguridad,
+       id_solicitud_seguridad,
+       id_estado_solicitud,
+       tipo_seguridad,
+       tipo_solicitud,
+       fecha_seguridad,
+       descripcion,
+       estado_atencion,
+       ubicacion_evento,
+       referencia_evento,
+       estado
+FROM seguridad
+WHERE estado = 1
+ORDER BY id_seguridad DESC;

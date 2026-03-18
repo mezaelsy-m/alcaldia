@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla seguridad.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_seguridad_au_audit//
+CREATE TRIGGER tr_seguridad_au_audit AFTER UPDATE ON seguridad
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'seguridad', 'UPDATE', CAST(NEW.id_seguridad AS CHAR), 'UPDATE en seguridad', 'Se actualizo un registro en seguridad', JSON_OBJECT('id_seguridad', OLD.id_seguridad, 'ticket_interno', OLD.ticket_interno, 'id_beneficiario', OLD.id_beneficiario, 'id_usuario', OLD.id_usuario, 'id_tipo_seguridad', OLD.id_tipo_seguridad, 'id_solicitud_seguridad', OLD.id_solicitud_seguridad, 'id_estado_solicitud', OLD.id_estado_solicitud, 'tipo_seguridad', OLD.tipo_seguridad, 'tipo_solicitud', OLD.tipo_solicitud, 'fecha_seguridad', OLD.fecha_seguridad, 'descripcion', OLD.descripcion, 'estado_atencion', OLD.estado_atencion, 'ubicacion_evento', OLD.ubicacion_evento, 'referencia_evento', OLD.referencia_evento, 'estado', OLD.estado), JSON_OBJECT('id_seguridad', NEW.id_seguridad, 'ticket_interno', NEW.ticket_interno, 'id_beneficiario', NEW.id_beneficiario, 'id_usuario', NEW.id_usuario, 'id_tipo_seguridad', NEW.id_tipo_seguridad, 'id_solicitud_seguridad', NEW.id_solicitud_seguridad, 'id_estado_solicitud', NEW.id_estado_solicitud, 'tipo_seguridad', NEW.tipo_seguridad, 'tipo_solicitud', NEW.tipo_solicitud, 'fecha_seguridad', NEW.fecha_seguridad, 'descripcion', NEW.descripcion, 'estado_atencion', NEW.estado_atencion, 'ubicacion_evento', NEW.ubicacion_evento, 'referencia_evento', NEW.referencia_evento, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

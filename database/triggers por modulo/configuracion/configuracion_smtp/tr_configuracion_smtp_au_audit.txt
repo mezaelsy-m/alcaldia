@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla configuracion_smtp.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_configuracion_smtp_au_audit//
+CREATE TRIGGER tr_configuracion_smtp_au_audit AFTER UPDATE ON configuracion_smtp
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'configuracion_smtp', 'UPDATE', CAST(NEW.id_configuracion_smtp AS CHAR), 'UPDATE en configuracion_smtp', 'Se actualizo un registro en configuracion_smtp', JSON_OBJECT('id_configuracion_smtp', OLD.id_configuracion_smtp, 'host', OLD.host, 'puerto', OLD.puerto, 'usuario', OLD.usuario, 'clave', OLD.clave, 'correo_remitente', OLD.correo_remitente, 'nombre_remitente', OLD.nombre_remitente, 'usar_tls', OLD.usar_tls, 'estado', OLD.estado, 'id_usuario_actualiza', OLD.id_usuario_actualiza, 'fecha_registro', OLD.fecha_registro, 'fecha_actualizacion', OLD.fecha_actualizacion), JSON_OBJECT('id_configuracion_smtp', NEW.id_configuracion_smtp, 'host', NEW.host, 'puerto', NEW.puerto, 'usuario', NEW.usuario, 'clave', NEW.clave, 'correo_remitente', NEW.correo_remitente, 'nombre_remitente', NEW.nombre_remitente, 'usar_tls', NEW.usar_tls, 'estado', NEW.estado, 'id_usuario_actualiza', NEW.id_usuario_actualiza, 'fecha_registro', NEW.fecha_registro, 'fecha_actualizacion', NEW.fecha_actualizacion), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

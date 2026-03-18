@@ -1,0 +1,6 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE dependencias
+SET nombre_dependencia = ?,
+    estado = ?
+WHERE id_dependencia = ?;

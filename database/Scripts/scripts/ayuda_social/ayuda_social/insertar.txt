@@ -1,0 +1,15 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO ayuda_social (
+    ticket_interno,
+    id_beneficiario,
+    id_usuario,
+    id_tipo_ayuda_social,
+    id_solicitud_ayuda_social,
+    id_estado_solicitud,
+    tipo_ayuda,
+    solicitud_ayuda,
+    fecha_ayuda,
+    descripcion,
+    estado
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

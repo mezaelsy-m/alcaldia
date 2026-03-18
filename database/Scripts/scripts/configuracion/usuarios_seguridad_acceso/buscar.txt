@@ -1,0 +1,22 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_usuario,
+       intentos_fallidos,
+       bloqueado,
+       fecha_bloqueo,
+       password_temporal,
+       fecha_password_temporal,
+       fecha_actualizacion
+FROM usuarios_seguridad_acceso
+WHERE id_usuario = ?;
+
+SQL (listado):
+SELECT id_usuario,
+       intentos_fallidos,
+       bloqueado,
+       fecha_bloqueo,
+       password_temporal,
+       fecha_password_temporal,
+       fecha_actualizacion
+FROM usuarios_seguridad_acceso
+ORDER BY id_usuario DESC;

@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla dependencias.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_dependencias_au_audit//
+CREATE TRIGGER tr_dependencias_au_audit AFTER UPDATE ON dependencias
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'dependencias', 'UPDATE', CAST(NEW.id_dependencia AS CHAR), 'UPDATE en dependencias', 'Se actualizo un registro en dependencias', JSON_OBJECT('id_dependencia', OLD.id_dependencia, 'nombre_dependencia', OLD.nombre_dependencia, 'estado', OLD.estado), JSON_OBJECT('id_dependencia', NEW.id_dependencia, 'nombre_dependencia', NEW.nombre_dependencia, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

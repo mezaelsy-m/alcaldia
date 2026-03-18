@@ -1,0 +1,12 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO asignaciones_unidades_choferes (
+    id_unidad,
+    id_chofer_ambulancia,
+    fecha_inicio,
+    fecha_fin,
+    observaciones,
+    estado,
+    fecha_registro,
+    fecha_actualizacion
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);

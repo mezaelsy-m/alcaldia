@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla tipos_servicios_publicos.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_tipos_servicios_publicos_au_audit//
+CREATE TRIGGER tr_tipos_servicios_publicos_au_audit AFTER UPDATE ON tipos_servicios_publicos
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'tipos_servicios_publicos', 'UPDATE', CAST(NEW.id_tipo_servicio_publico AS CHAR), 'UPDATE en tipos_servicios_publicos', 'Se actualizo un registro en tipos_servicios_publicos', JSON_OBJECT('id_tipo_servicio_publico', OLD.id_tipo_servicio_publico, 'codigo_tipo_servicio_publico', OLD.codigo_tipo_servicio_publico, 'nombre_tipo_servicio', OLD.nombre_tipo_servicio, 'estado', OLD.estado, 'fecha_registro', OLD.fecha_registro), JSON_OBJECT('id_tipo_servicio_publico', NEW.id_tipo_servicio_publico, 'codigo_tipo_servicio_publico', NEW.codigo_tipo_servicio_publico, 'nombre_tipo_servicio', NEW.nombre_tipo_servicio, 'estado', NEW.estado, 'fecha_registro', NEW.fecha_registro), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

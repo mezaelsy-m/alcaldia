@@ -1,0 +1,12 @@
+Explica: trigger AFTER INSERT sobre la tabla tipos_seguridad_emergencia.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_tipos_seguridad_emergencia_ai_audit//
+CREATE TRIGGER tr_tipos_seguridad_emergencia_ai_audit AFTER INSERT ON tipos_seguridad_emergencia
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'tipos_seguridad_emergencia', 'INSERT', CAST(NEW.id_tipo_seguridad AS CHAR), 'INSERT en tipos_seguridad_emergencia', 'Se inserto un registro en tipos_seguridad_emergencia', NULL, JSON_OBJECT('id_tipo_seguridad', NEW.id_tipo_seguridad, 'nombre_tipo', NEW.nombre_tipo, 'requiere_ambulancia', NEW.requiere_ambulancia, 'estado', NEW.estado, 'fecha_registro', NEW.fecha_registro), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

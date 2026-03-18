@@ -1,0 +1,15 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO servicios_publicos (
+    ticket_interno,
+    id_beneficiario,
+    id_usuario,
+    id_tipo_servicio_publico,
+    id_solicitud_servicio_publico,
+    id_estado_solicitud,
+    tipo_servicio,
+    solicitud_servicio,
+    fecha_servicio,
+    descripcion,
+    estado
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

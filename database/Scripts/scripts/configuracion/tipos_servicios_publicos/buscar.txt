@@ -1,0 +1,19 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_tipo_servicio_publico,
+       codigo_tipo_servicio_publico,
+       nombre_tipo_servicio,
+       estado,
+       fecha_registro
+FROM tipos_servicios_publicos
+WHERE id_tipo_servicio_publico = ?;
+
+SQL (listado):
+SELECT id_tipo_servicio_publico,
+       codigo_tipo_servicio_publico,
+       nombre_tipo_servicio,
+       estado,
+       fecha_registro
+FROM tipos_servicios_publicos
+WHERE estado = 1
+ORDER BY id_tipo_servicio_publico DESC;

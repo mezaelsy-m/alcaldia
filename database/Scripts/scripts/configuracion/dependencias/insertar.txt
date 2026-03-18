@@ -1,0 +1,6 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO dependencias (
+    nombre_dependencia,
+    estado
+) VALUES (?, ?);

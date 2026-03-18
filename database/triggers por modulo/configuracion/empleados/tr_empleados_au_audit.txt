@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla empleados.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_empleados_au_audit//
+CREATE TRIGGER tr_empleados_au_audit AFTER UPDATE ON empleados
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'empleados', 'UPDATE', CAST(NEW.id_empleado AS CHAR), 'UPDATE en empleados', 'Se actualizo un registro en empleados', JSON_OBJECT('id_empleado', OLD.id_empleado, 'cedula', OLD.cedula, 'nombre', OLD.nombre, 'apellido', OLD.apellido, 'id_dependencia', OLD.id_dependencia, 'telefono', OLD.telefono, 'correo', OLD.correo, 'direccion', OLD.direccion, 'estado', OLD.estado), JSON_OBJECT('id_empleado', NEW.id_empleado, 'cedula', NEW.cedula, 'nombre', NEW.nombre, 'apellido', NEW.apellido, 'id_dependencia', NEW.id_dependencia, 'telefono', NEW.telefono, 'correo', NEW.correo, 'direccion', NEW.direccion, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

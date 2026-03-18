@@ -1,0 +1,13 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE unidades
+SET codigo_unidad = ?,
+    descripcion = ?,
+    placa = ?,
+    estado = ?,
+    estado_operativo = ?,
+    ubicacion_actual = ?,
+    referencia_actual = ?,
+    prioridad_despacho = ?,
+    fecha_actualizacion_operativa = ?
+WHERE id_unidad = ?;

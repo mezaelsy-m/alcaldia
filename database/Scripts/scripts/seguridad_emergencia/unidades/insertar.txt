@@ -1,0 +1,13 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO unidades (
+    codigo_unidad,
+    descripcion,
+    placa,
+    estado,
+    estado_operativo,
+    ubicacion_actual,
+    referencia_actual,
+    prioridad_despacho,
+    fecha_actualizacion_operativa
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);

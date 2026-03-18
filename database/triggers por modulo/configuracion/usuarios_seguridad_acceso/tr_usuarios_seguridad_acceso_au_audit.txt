@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla usuarios_seguridad_acceso.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_usuarios_seguridad_acceso_au_audit//
+CREATE TRIGGER tr_usuarios_seguridad_acceso_au_audit AFTER UPDATE ON usuarios_seguridad_acceso
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'usuarios_seguridad_acceso', 'UPDATE', CAST(NEW.id_usuario AS CHAR), 'UPDATE en usuarios_seguridad_acceso', 'Se actualizo un registro en usuarios_seguridad_acceso', JSON_OBJECT('id_usuario', OLD.id_usuario, 'intentos_fallidos', OLD.intentos_fallidos, 'bloqueado', OLD.bloqueado, 'fecha_bloqueo', OLD.fecha_bloqueo, 'password_temporal', OLD.password_temporal, 'fecha_password_temporal', OLD.fecha_password_temporal, 'fecha_actualizacion', OLD.fecha_actualizacion), JSON_OBJECT('id_usuario', NEW.id_usuario, 'intentos_fallidos', NEW.intentos_fallidos, 'bloqueado', NEW.bloqueado, 'fecha_bloqueo', NEW.fecha_bloqueo, 'password_temporal', NEW.password_temporal, 'fecha_password_temporal', NEW.fecha_password_temporal, 'fecha_actualizacion', NEW.fecha_actualizacion), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

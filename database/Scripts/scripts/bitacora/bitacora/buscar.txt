@@ -1,0 +1,37 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_bitacora,
+       id_usuario,
+       tabla_afectada,
+       accion,
+       id_registro,
+       resumen,
+       detalle,
+       datos_antes,
+       datos_despues,
+       usuario_bd,
+       ipaddr,
+       moment,
+       fecha_evento,
+       estado
+FROM bitacora
+WHERE id_bitacora = ?;
+
+SQL (listado):
+SELECT id_bitacora,
+       id_usuario,
+       tabla_afectada,
+       accion,
+       id_registro,
+       resumen,
+       detalle,
+       datos_antes,
+       datos_despues,
+       usuario_bd,
+       ipaddr,
+       moment,
+       fecha_evento,
+       estado
+FROM bitacora
+WHERE estado = 1
+ORDER BY id_bitacora DESC;

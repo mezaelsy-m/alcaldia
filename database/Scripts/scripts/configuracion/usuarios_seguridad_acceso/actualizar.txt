@@ -1,0 +1,10 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE usuarios_seguridad_acceso
+SET intentos_fallidos = ?,
+    bloqueado = ?,
+    fecha_bloqueo = ?,
+    password_temporal = ?,
+    fecha_password_temporal = ?,
+    fecha_actualizacion = ?
+WHERE id_usuario = ?;

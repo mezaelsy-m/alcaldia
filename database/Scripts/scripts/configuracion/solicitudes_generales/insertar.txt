@@ -1,0 +1,8 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO solicitudes_generales (
+    codigo_solicitud,
+    nombre_solicitud,
+    estado,
+    fecha_registro
+) VALUES (?, ?, ?, ?);

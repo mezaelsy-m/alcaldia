@@ -1,0 +1,15 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_dependencia,
+       nombre_dependencia,
+       estado
+FROM dependencias
+WHERE id_dependencia = ?;
+
+SQL (listado):
+SELECT id_dependencia,
+       nombre_dependencia,
+       estado
+FROM dependencias
+WHERE estado = 1
+ORDER BY id_dependencia DESC;

@@ -1,0 +1,12 @@
+Explica: trigger AFTER INSERT sobre la tabla tipos_ayuda_social.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_tipos_ayuda_social_ai_audit//
+CREATE TRIGGER tr_tipos_ayuda_social_ai_audit AFTER INSERT ON tipos_ayuda_social
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'tipos_ayuda_social', 'INSERT', CAST(NEW.id_tipo_ayuda_social AS CHAR), 'INSERT en tipos_ayuda_social', 'Se inserto un registro en tipos_ayuda_social', NULL, JSON_OBJECT('id_tipo_ayuda_social', NEW.id_tipo_ayuda_social, 'nombre_tipo_ayuda', NEW.nombre_tipo_ayuda, 'requiere_ambulancia', NEW.requiere_ambulancia, 'estado', NEW.estado, 'fecha_registro', NEW.fecha_registro), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

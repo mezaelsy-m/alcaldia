@@ -1,0 +1,11 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO usuarios_seguridad_acceso (
+    id_usuario,
+    intentos_fallidos,
+    bloqueado,
+    fecha_bloqueo,
+    password_temporal,
+    fecha_password_temporal,
+    fecha_actualizacion
+) VALUES (?, ?, ?, ?, ?, ?, ?);

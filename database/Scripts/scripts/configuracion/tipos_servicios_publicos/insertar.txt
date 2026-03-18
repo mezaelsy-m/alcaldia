@@ -1,0 +1,8 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO tipos_servicios_publicos (
+    codigo_tipo_servicio_publico,
+    nombre_tipo_servicio,
+    estado,
+    fecha_registro
+) VALUES (?, ?, ?, ?);

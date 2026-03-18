@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla unidades.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_unidades_au_audit//
+CREATE TRIGGER tr_unidades_au_audit AFTER UPDATE ON unidades
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'unidades', 'UPDATE', CAST(NEW.id_unidad AS CHAR), 'UPDATE en unidades', 'Se actualizo un registro en unidades', JSON_OBJECT('id_unidad', OLD.id_unidad, 'codigo_unidad', OLD.codigo_unidad, 'descripcion', OLD.descripcion, 'placa', OLD.placa, 'estado', OLD.estado, 'estado_operativo', OLD.estado_operativo, 'ubicacion_actual', OLD.ubicacion_actual, 'referencia_actual', OLD.referencia_actual, 'prioridad_despacho', OLD.prioridad_despacho, 'fecha_actualizacion_operativa', OLD.fecha_actualizacion_operativa), JSON_OBJECT('id_unidad', NEW.id_unidad, 'codigo_unidad', NEW.codigo_unidad, 'descripcion', NEW.descripcion, 'placa', NEW.placa, 'estado', NEW.estado, 'estado_operativo', NEW.estado_operativo, 'ubicacion_actual', NEW.ubicacion_actual, 'referencia_actual', NEW.referencia_actual, 'prioridad_despacho', NEW.prioridad_despacho, 'fecha_actualizacion_operativa', NEW.fecha_actualizacion_operativa), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

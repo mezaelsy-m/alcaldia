@@ -1,0 +1,14 @@
+Explica: trigger BEFORE INSERT sobre la tabla bitacora.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_bitacora_bi_defaults//
+CREATE TRIGGER tr_bitacora_bi_defaults BEFORE INSERT ON bitacora
+FOR EACH ROW
+BEGIN
+  SET NEW.accion = COALESCE(NULLIF(NEW.accion, ''), 'LEGACY');
+  SET NEW.tabla_afectada = COALESCE(NULLIF(NEW.tabla_afectada, ''), 'SISTEMA');
+  SET NEW.usuario_bd = COALESCE(NULLIF(NEW.usuario_bd, ''), CURRENT_USER());
+  SET NEW.fecha_evento = COALESCE(NEW.fecha_evento, NOW());
+END
+//
+DELIMITER ;

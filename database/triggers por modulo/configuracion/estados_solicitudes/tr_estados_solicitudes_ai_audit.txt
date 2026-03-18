@@ -1,0 +1,12 @@
+Explica: trigger AFTER INSERT sobre la tabla estados_solicitudes.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_estados_solicitudes_ai_audit//
+CREATE TRIGGER tr_estados_solicitudes_ai_audit AFTER INSERT ON estados_solicitudes
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'estados_solicitudes', 'INSERT', CAST(NEW.id_estado_solicitud AS CHAR), 'INSERT en estados_solicitudes', 'Se inserto un registro en estados_solicitudes', NULL, JSON_OBJECT('id_estado_solicitud', NEW.id_estado_solicitud, 'codigo_estado', NEW.codigo_estado, 'nombre_estado', NEW.nombre_estado, 'descripcion', NEW.descripcion, 'clase_badge', NEW.clase_badge, 'es_atendida', NEW.es_atendida, 'orden_visual', NEW.orden_visual, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

@@ -1,0 +1,17 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE reportes_traslado
+SET id_ayuda = ?,
+    id_seguridad = ?,
+    id_despacho_unidad = ?,
+    id_usuario_operador = ?,
+    id_empleado_chofer = ?,
+    id_unidad = ?,
+    ticket_interno = ?,
+    fecha_hora = ?,
+    diagnostico_paciente = ?,
+    foto_evidencia = ?,
+    km_salida = ?,
+    km_llegada = ?,
+    estado = ?
+WHERE id_reporte = ?;

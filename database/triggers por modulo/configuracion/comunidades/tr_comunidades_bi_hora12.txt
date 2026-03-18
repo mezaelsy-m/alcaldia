@@ -1,0 +1,14 @@
+Explica: trigger BEFORE INSERT sobre la tabla comunidades.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_comunidades_bi_hora12//
+CREATE TRIGGER tr_comunidades_bi_hora12 BEFORE INSERT ON comunidades
+FOR EACH ROW
+BEGIN
+    IF NEW.fecha_registro IS NULL THEN
+        SET NEW.fecha_registro = NOW();
+    END IF;
+    SET NEW.hora_registro_12h = DATE_FORMAT(NEW.fecha_registro, '%r');
+END
+//
+DELIMITER ;

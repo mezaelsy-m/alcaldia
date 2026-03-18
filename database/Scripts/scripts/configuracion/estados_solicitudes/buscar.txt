@@ -1,0 +1,25 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_estado_solicitud,
+       codigo_estado,
+       nombre_estado,
+       descripcion,
+       clase_badge,
+       es_atendida,
+       orden_visual,
+       estado
+FROM estados_solicitudes
+WHERE id_estado_solicitud = ?;
+
+SQL (listado):
+SELECT id_estado_solicitud,
+       codigo_estado,
+       nombre_estado,
+       descripcion,
+       clase_badge,
+       es_atendida,
+       orden_visual,
+       estado
+FROM estados_solicitudes
+WHERE estado = 1
+ORDER BY id_estado_solicitud DESC;

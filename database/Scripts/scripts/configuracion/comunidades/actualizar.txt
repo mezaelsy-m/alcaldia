@@ -1,0 +1,8 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE comunidades
+SET nombre_comunidad = ?,
+    estado = ?,
+    fecha_registro = ?,
+    hora_registro_12h = ?
+WHERE id_comunidad = ?;

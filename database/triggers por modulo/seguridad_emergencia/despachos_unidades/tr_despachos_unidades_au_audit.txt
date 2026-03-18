@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla despachos_unidades.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_despachos_unidades_au_audit//
+CREATE TRIGGER tr_despachos_unidades_au_audit AFTER UPDATE ON despachos_unidades
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'despachos_unidades', 'UPDATE', CAST(NEW.id_despacho_unidad AS CHAR), 'UPDATE en despachos_unidades', 'Se actualizo un registro en despachos_unidades', JSON_OBJECT('id_despacho_unidad', OLD.id_despacho_unidad, 'id_seguridad', OLD.id_seguridad, 'id_unidad', OLD.id_unidad, 'id_chofer_ambulancia', OLD.id_chofer_ambulancia, 'id_usuario_asigna', OLD.id_usuario_asigna, 'modo_asignacion', OLD.modo_asignacion, 'estado_despacho', OLD.estado_despacho, 'fecha_asignacion', OLD.fecha_asignacion, 'fecha_cierre', OLD.fecha_cierre, 'ubicacion_salida', OLD.ubicacion_salida, 'ubicacion_evento', OLD.ubicacion_evento, 'ubicacion_cierre', OLD.ubicacion_cierre, 'observaciones', OLD.observaciones, 'fecha_registro', OLD.fecha_registro, 'fecha_actualizacion', OLD.fecha_actualizacion), JSON_OBJECT('id_despacho_unidad', NEW.id_despacho_unidad, 'id_seguridad', NEW.id_seguridad, 'id_unidad', NEW.id_unidad, 'id_chofer_ambulancia', NEW.id_chofer_ambulancia, 'id_usuario_asigna', NEW.id_usuario_asigna, 'modo_asignacion', NEW.modo_asignacion, 'estado_despacho', NEW.estado_despacho, 'fecha_asignacion', NEW.fecha_asignacion, 'fecha_cierre', NEW.fecha_cierre, 'ubicacion_salida', NEW.ubicacion_salida, 'ubicacion_evento', NEW.ubicacion_evento, 'ubicacion_cierre', NEW.ubicacion_cierre, 'observaciones', NEW.observaciones, 'fecha_registro', NEW.fecha_registro, 'fecha_actualizacion', NEW.fecha_actualizacion), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

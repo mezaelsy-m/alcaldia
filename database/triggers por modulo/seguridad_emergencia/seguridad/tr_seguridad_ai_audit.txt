@@ -1,0 +1,12 @@
+Explica: trigger AFTER INSERT sobre la tabla seguridad.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_seguridad_ai_audit//
+CREATE TRIGGER tr_seguridad_ai_audit AFTER INSERT ON seguridad
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'seguridad', 'INSERT', CAST(NEW.id_seguridad AS CHAR), 'INSERT en seguridad', 'Se inserto un registro en seguridad', NULL, JSON_OBJECT('id_seguridad', NEW.id_seguridad, 'ticket_interno', NEW.ticket_interno, 'id_beneficiario', NEW.id_beneficiario, 'id_usuario', NEW.id_usuario, 'id_tipo_seguridad', NEW.id_tipo_seguridad, 'id_solicitud_seguridad', NEW.id_solicitud_seguridad, 'id_estado_solicitud', NEW.id_estado_solicitud, 'tipo_seguridad', NEW.tipo_seguridad, 'tipo_solicitud', NEW.tipo_solicitud, 'fecha_seguridad', NEW.fecha_seguridad, 'descripcion', NEW.descripcion, 'estado_atencion', NEW.estado_atencion, 'ubicacion_evento', NEW.ubicacion_evento, 'referencia_evento', NEW.referencia_evento, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

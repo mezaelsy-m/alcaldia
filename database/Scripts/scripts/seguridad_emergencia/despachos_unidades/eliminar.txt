@@ -1,0 +1,5 @@
+Explica: reemplaza eliminacion fisica por cierre operativo del despacho.
+SQL:
+UPDATE despachos_unidades
+SET estado_despacho = 'CERRADO'
+WHERE id_despacho_unidad = ?;

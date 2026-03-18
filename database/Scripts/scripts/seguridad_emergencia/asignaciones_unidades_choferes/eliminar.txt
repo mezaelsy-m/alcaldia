@@ -1,0 +1,5 @@
+Explica: aplica eliminacion logica desactivando el registro sin borrado fisico.
+SQL:
+UPDATE asignaciones_unidades_choferes
+SET estado = 0
+WHERE id_asignacion_unidad_chofer = ?;

@@ -1,0 +1,251 @@
+/* Estilos personalizados para el escritorio principal */
+
+/* Tarjetas principales */
+.small-box {
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+    position: relative;
+}
+
+.small-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.small-box .inner {
+    padding: 20px;
+}
+
+.small-box h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.small-box p {
+    font-size: 1rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.small-box .icon {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.small-box:hover .icon {
+    color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Colores personalizados */
+.bg-gradient-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+}
+
+.bg-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+}
+
+.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+}
+
+.bg-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+}
+
+.bg-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+.bg-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #545b62 100%) !important;
+}
+
+.bg-dark {
+    background: linear-gradient(135deg, #343a40 0%, #1d2124 100%) !important;
+}
+
+/* Info boxes */
+.info-box {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+}
+
+.info-box:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.info-box-icon {
+    border-radius: 10px 0 0 10px;
+    font-size: 1.8rem;
+}
+
+.info-box-content {
+    padding: 15px;
+}
+
+.info-box-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+
+.info-box-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #343a40;
+}
+
+/* Tarjeta de estadísticas */
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    border-bottom: none;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.card-title {
+    font-weight: 700;
+    color: #495057;
+    margin: 0;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Efectos de números animados */
+.counter {
+    display: inline-block;
+    position: relative;
+}
+
+.counter::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .small-box h3 {
+        font-size: 2rem;
+    }
+    
+    .small-box .icon {
+        font-size: 2.5rem;
+        right: 15px;
+    }
+    
+    .info-box-number {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .small-box h3 {
+        font-size: 1.8rem;
+    }
+    
+    .small-box .icon {
+        font-size: 2rem;
+        right: 10px;
+    }
+    
+    .info-box-number {
+        font-size: 1.3rem;
+    }
+    
+    .info-box-text {
+        font-size: 0.8rem;
+    }
+}
+
+/* Efectos hover personalizados */
+.small-box-footer {
+    background: rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.small-box-footer:hover {
+    background: rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+/* Loading animation */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

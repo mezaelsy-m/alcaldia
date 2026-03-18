@@ -1,0 +1,8 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE solicitudes_generales
+SET codigo_solicitud = ?,
+    nombre_solicitud = ?,
+    estado = ?,
+    fecha_registro = ?
+WHERE id_solicitud_general = ?;

@@ -1,0 +1,33 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_ayuda,
+       ticket_interno,
+       id_beneficiario,
+       id_usuario,
+       id_tipo_ayuda_social,
+       id_solicitud_ayuda_social,
+       id_estado_solicitud,
+       tipo_ayuda,
+       solicitud_ayuda,
+       fecha_ayuda,
+       descripcion,
+       estado
+FROM ayuda_social
+WHERE id_ayuda = ?;
+
+SQL (listado):
+SELECT id_ayuda,
+       ticket_interno,
+       id_beneficiario,
+       id_usuario,
+       id_tipo_ayuda_social,
+       id_solicitud_ayuda_social,
+       id_estado_solicitud,
+       tipo_ayuda,
+       solicitud_ayuda,
+       fecha_ayuda,
+       descripcion,
+       estado
+FROM ayuda_social
+WHERE estado = 1
+ORDER BY id_ayuda DESC;

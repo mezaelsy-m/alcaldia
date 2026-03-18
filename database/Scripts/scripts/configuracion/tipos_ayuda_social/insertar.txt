@@ -1,0 +1,8 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO tipos_ayuda_social (
+    nombre_tipo_ayuda,
+    requiere_ambulancia,
+    estado,
+    fecha_registro
+) VALUES (?, ?, ?, ?);

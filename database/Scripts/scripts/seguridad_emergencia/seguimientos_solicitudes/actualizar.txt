@@ -1,0 +1,11 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE seguimientos_solicitudes
+SET modulo = ?,
+    id_referencia = ?,
+    id_estado_solicitud = ?,
+    id_usuario = ?,
+    fecha_gestion = ?,
+    observacion = ?,
+    estado = ?
+WHERE id_seguimiento_solicitud = ?;

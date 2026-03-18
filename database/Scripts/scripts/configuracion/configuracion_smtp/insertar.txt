@@ -1,0 +1,15 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO configuracion_smtp (
+    host,
+    puerto,
+    usuario,
+    clave,
+    correo_remitente,
+    nombre_remitente,
+    usar_tls,
+    estado,
+    id_usuario_actualiza,
+    fecha_registro,
+    fecha_actualizacion
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);

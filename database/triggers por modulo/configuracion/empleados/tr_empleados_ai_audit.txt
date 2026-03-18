@@ -1,0 +1,12 @@
+Explica: trigger AFTER INSERT sobre la tabla empleados.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_empleados_ai_audit//
+CREATE TRIGGER tr_empleados_ai_audit AFTER INSERT ON empleados
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'empleados', 'INSERT', CAST(NEW.id_empleado AS CHAR), 'INSERT en empleados', 'Se inserto un registro en empleados', NULL, JSON_OBJECT('id_empleado', NEW.id_empleado, 'cedula', NEW.cedula, 'nombre', NEW.nombre, 'apellido', NEW.apellido, 'id_dependencia', NEW.id_dependencia, 'telefono', NEW.telefono, 'correo', NEW.correo, 'direccion', NEW.direccion, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

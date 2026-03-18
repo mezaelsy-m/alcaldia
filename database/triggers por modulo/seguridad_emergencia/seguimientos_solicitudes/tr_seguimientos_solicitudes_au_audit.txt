@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla seguimientos_solicitudes.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_seguimientos_solicitudes_au_audit//
+CREATE TRIGGER tr_seguimientos_solicitudes_au_audit AFTER UPDATE ON seguimientos_solicitudes
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'seguimientos_solicitudes', 'UPDATE', CAST(NEW.id_seguimiento_solicitud AS CHAR), 'UPDATE en seguimientos_solicitudes', 'Se actualizo un registro en seguimientos_solicitudes', JSON_OBJECT('id_seguimiento_solicitud', OLD.id_seguimiento_solicitud, 'modulo', OLD.modulo, 'id_referencia', OLD.id_referencia, 'id_estado_solicitud', OLD.id_estado_solicitud, 'id_usuario', OLD.id_usuario, 'fecha_gestion', OLD.fecha_gestion, 'observacion', OLD.observacion, 'estado', OLD.estado), JSON_OBJECT('id_seguimiento_solicitud', NEW.id_seguimiento_solicitud, 'modulo', NEW.modulo, 'id_referencia', NEW.id_referencia, 'id_estado_solicitud', NEW.id_estado_solicitud, 'id_usuario', NEW.id_usuario, 'fecha_gestion', NEW.fecha_gestion, 'observacion', NEW.observacion, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

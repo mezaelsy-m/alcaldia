@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla permisos.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_permisos_au_audit//
+CREATE TRIGGER tr_permisos_au_audit AFTER UPDATE ON permisos
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'permisos', 'UPDATE', CAST(NEW.id_permiso AS CHAR), 'UPDATE en permisos', 'Se actualizo un registro en permisos', JSON_OBJECT('id_permiso', OLD.id_permiso, 'nombre_permiso', OLD.nombre_permiso, 'descripcion', OLD.descripcion, 'estado', OLD.estado), JSON_OBJECT('id_permiso', NEW.id_permiso, 'nombre_permiso', NEW.nombre_permiso, 'descripcion', NEW.descripcion, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

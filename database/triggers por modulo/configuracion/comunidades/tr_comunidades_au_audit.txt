@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla comunidades.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_comunidades_au_audit//
+CREATE TRIGGER tr_comunidades_au_audit AFTER UPDATE ON comunidades
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'comunidades', 'UPDATE', CAST(NEW.id_comunidad AS CHAR), 'UPDATE en comunidades', 'Se actualizo un registro en comunidades', JSON_OBJECT('id_comunidad', OLD.id_comunidad, 'nombre_comunidad', OLD.nombre_comunidad, 'estado', OLD.estado, 'fecha_registro', OLD.fecha_registro, 'hora_registro_12h', OLD.hora_registro_12h), JSON_OBJECT('id_comunidad', NEW.id_comunidad, 'nombre_comunidad', NEW.nombre_comunidad, 'estado', NEW.estado, 'fecha_registro', NEW.fecha_registro, 'hora_registro_12h', NEW.hora_registro_12h), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

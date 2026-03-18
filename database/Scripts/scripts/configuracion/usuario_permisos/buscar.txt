@@ -1,0 +1,17 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_usuario_permiso,
+       id_usuario,
+       id_permiso,
+       estado
+FROM usuario_permisos
+WHERE id_usuario_permiso = ?;
+
+SQL (listado):
+SELECT id_usuario_permiso,
+       id_usuario,
+       id_permiso,
+       estado
+FROM usuario_permisos
+WHERE estado = 1
+ORDER BY id_usuario_permiso DESC;

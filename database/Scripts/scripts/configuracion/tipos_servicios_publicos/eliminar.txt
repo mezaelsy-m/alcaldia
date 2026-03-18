@@ -1,0 +1,5 @@
+Explica: aplica eliminacion logica desactivando el registro sin borrado fisico.
+SQL:
+UPDATE tipos_servicios_publicos
+SET estado = 0
+WHERE id_tipo_servicio_publico = ?;

@@ -1,0 +1,11 @@
+Explica: trigger BEFORE DELETE sobre la tabla unidades.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_unidades_bd_block_delete//
+CREATE TRIGGER tr_unidades_bd_block_delete BEFORE DELETE ON unidades
+FOR EACH ROW
+BEGIN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Eliminacion fisica bloqueada en tabla unidades. Use eliminacion logica.';
+END
+//
+DELIMITER ;

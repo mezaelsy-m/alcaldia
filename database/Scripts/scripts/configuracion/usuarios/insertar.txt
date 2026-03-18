@@ -1,0 +1,10 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO usuarios (
+    id_empleado,
+    id_dependencia,
+    usuario,
+    password,
+    rol,
+    estado
+) VALUES (?, ?, ?, ?, ?, ?);

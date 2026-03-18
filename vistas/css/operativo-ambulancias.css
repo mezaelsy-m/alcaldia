@@ -1,0 +1,391 @@
+.modal-operativo-full {
+    max-width: calc(100% - 1.5rem);
+    height: calc(100% - 1.5rem);
+    margin: 0.75rem auto;
+}
+
+.modal-operativo-full .modal-content {
+    height: 100%;
+    border: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(10, 28, 46, 0.16);
+}
+
+.modal-operativo-full .modal-header {
+    border-bottom: 1px solid #d7e2ef;
+    background: linear-gradient(180deg, #ffffff 0%, #f5f9fc 100%);
+}
+
+.modal-operativo-full .modal-body {
+    background: #f4f7fb;
+    overflow-y: auto;
+}
+
+.operativo-panel {
+    width: 100%;
+}
+
+.operativo-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-bottom: 1rem;
+}
+
+.operativo-toolbar .btn-group {
+    flex-wrap: nowrap;
+}
+
+.operativo-toolbar .btn-group .btn {
+    font-weight: 600;
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+}
+
+.operativo-action-group {
+    display: inline-flex;
+    align-items: stretch;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 22px rgba(10, 28, 46, 0.12);
+}
+
+.operativo-action-group .btn {
+    border-radius: 0;
+    margin: 0;
+    border-right-width: 0;
+    min-height: 40px;
+}
+
+.operativo-action-group .btn:last-child {
+    border-right-width: 1px;
+}
+
+.operativo-action-group .btn:focus {
+    position: relative;
+    z-index: 2;
+}
+
+.operativo-icon-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.operativo-summary-card {
+    border: 1px solid #d8e3ef;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+    box-shadow: 0 10px 24px rgba(10, 28, 46, 0.08);
+    padding: 14px 16px;
+    height: 100%;
+}
+
+.operativo-summary-card .label {
+    font-size: 0.73rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6f7f92;
+    margin-bottom: 6px;
+}
+
+.operativo-summary-card .value {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #12324c;
+    margin: 0;
+}
+
+.operativo-pane {
+    display: none;
+}
+
+.operativo-pane.is-active {
+    display: block;
+}
+
+.operativo-form-card,
+.operativo-list-card {
+    border: 1px solid #d8e3ef;
+    border-radius: 18px;
+    box-shadow: 0 12px 28px rgba(10, 28, 46, 0.08);
+    overflow: hidden;
+}
+
+.operativo-form-card .card-header,
+.operativo-list-card .card-header {
+    background: linear-gradient(180deg, #f9fbfd 0%, #f1f6fa 100%);
+    border-bottom: 1px solid #d8e3ef;
+}
+
+.operativo-form-card .card-title,
+.operativo-list-card .card-title {
+    font-weight: 700;
+    margin: 0;
+}
+
+.operativo-help {
+    font-size: 0.82rem;
+    color: #6e7f92;
+}
+
+.operativo-cards-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.operativo-cards-grid.units {
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+}
+
+.operativo-cards-grid.drivers {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.operativo-empty-state {
+    border: 1px dashed #bfd0e2;
+    border-radius: 14px;
+    background: #f8fbfe;
+    color: #6d7c8d;
+    padding: 18px;
+    text-align: center;
+}
+
+.operativo-status-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.operativo-status-chip.ready {
+    background: #d8f3e3;
+    color: #0f6b43;
+}
+
+.operativo-status-chip.warning {
+    background: #fff0cf;
+    color: #9a6700;
+}
+
+.operativo-status-chip.danger {
+    background: #ffe3e3;
+    color: #9b2323;
+}
+
+.operativo-status-chip.info {
+    background: #dceffe;
+    color: #165d8d;
+}
+
+.operativo-card {
+    border-radius: 16px;
+    border: 1px solid #d5e0eb;
+    background: #ffffff;
+    box-shadow: 0 10px 22px rgba(10, 28, 46, 0.06);
+    padding: 14px 15px;
+}
+
+.operativo-card.unit-ready {
+    border-left: 4px solid #18a36b;
+}
+
+.operativo-card.unit-warning,
+.operativo-card.driver-warning {
+    border-left: 4px solid #d99b12;
+    background: #fffdf7;
+}
+
+.operativo-card.unit-danger {
+    border-left: 4px solid #d94b4b;
+    background: #fff8f8;
+}
+
+.operativo-card.unit-info,
+.operativo-card.driver-info {
+    border-left: 4px solid #2f7cc7;
+    background: #f7fbff;
+}
+
+.operativo-card.driver-ready {
+    border-left: 4px solid #18a36b;
+}
+
+.operativo-card.driver-danger,
+.operativo-unit-item.unit-danger {
+    border-left: 4px solid #d94b4b;
+    background: #fff8f8;
+}
+
+.operativo-card .title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.operativo-card .title-row h6 {
+    margin: 0;
+    font-weight: 700;
+    color: #12324c;
+}
+
+.operativo-card .subtitle {
+    color: #6f8092;
+    font-size: 0.85rem;
+}
+
+.operativo-card .details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.operativo-card .detail {
+    border: 1px solid #e4ebf2;
+    border-radius: 12px;
+    background: #f9fbfd;
+    padding: 9px 10px;
+}
+
+.operativo-card .detail small {
+    display: block;
+    color: #6f8092;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+}
+
+.operativo-card .detail strong {
+    color: #12324c;
+    font-size: 0.91rem;
+}
+
+.operativo-card .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.operativo-unit-list {
+    display: grid;
+    gap: 10px;
+    max-height: 520px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.operativo-unit-item {
+    border-radius: 14px;
+    border: 1px solid #d5e0eb;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(10, 28, 46, 0.06);
+    padding: 12px 13px;
+}
+
+.operativo-unit-item.unit-ready {
+    border-left: 4px solid #18a36b;
+}
+
+.operativo-unit-item.unit-warning {
+    border-left: 4px solid #d99b12;
+    background: #fffdf7;
+}
+
+.operativo-unit-item.unit-info {
+    border-left: 4px solid #2f7cc7;
+    background: #f7fbff;
+}
+
+.operativo-card .actions .btn {
+    border-radius: 999px;
+}
+
+.operativo-page-card {
+    border: 1px solid #d8e3ef;
+    border-radius: 18px;
+    box-shadow: 0 14px 30px rgba(10, 28, 46, 0.08);
+    overflow: hidden;
+}
+
+.operativo-page-card .card-header {
+    background: linear-gradient(180deg, #f9fbfd 0%, #f2f7fb 100%);
+    border-bottom: 1px solid #d8e3ef;
+}
+
+.operativo-page-card .card-title {
+    margin: 0;
+    font-weight: 700;
+}
+
+.operativo-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.operativo-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #5f7083;
+}
+
+.operativo-legend i {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.operativo-legend .dot-ready {
+    background: #18a36b;
+}
+
+.operativo-legend .dot-warning {
+    background: #d99b12;
+}
+
+.operativo-legend .dot-danger {
+    background: #d94b4b;
+}
+
+.operativo-legend .dot-info {
+    background: #2f7cc7;
+}
+
+@media (max-width: 991.98px) {
+    .modal-operativo-full {
+        max-width: calc(100% - 0.8rem);
+        height: calc(100% - 0.8rem);
+        margin: 0.4rem auto;
+    }
+
+    .operativo-toolbar {
+        align-items: stretch;
+    }
+
+    .operativo-toolbar .btn-group {
+        width: 100%;
+    }
+
+    .operativo-action-group .btn {
+        flex: 1 1 0;
+        padding-left: 0.7rem;
+        padding-right: 0.7rem;
+    }
+}

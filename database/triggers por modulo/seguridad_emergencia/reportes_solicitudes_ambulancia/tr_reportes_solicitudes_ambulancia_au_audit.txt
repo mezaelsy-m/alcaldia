@@ -1,0 +1,12 @@
+Explica: trigger AFTER UPDATE sobre la tabla reportes_solicitudes_ambulancia.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_reportes_solicitudes_ambulancia_au_audit//
+CREATE TRIGGER tr_reportes_solicitudes_ambulancia_au_audit AFTER UPDATE ON reportes_solicitudes_ambulancia
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'reportes_solicitudes_ambulancia', 'UPDATE', CAST(NEW.id_reporte_solicitud AS CHAR), 'UPDATE en reportes_solicitudes_ambulancia', 'Se actualizo un registro en reportes_solicitudes_ambulancia', JSON_OBJECT('id_reporte_solicitud', OLD.id_reporte_solicitud, 'id_seguridad', OLD.id_seguridad, 'id_despacho_unidad', OLD.id_despacho_unidad, 'tipo_reporte', OLD.tipo_reporte, 'nombre_archivo', OLD.nombre_archivo, 'ruta_archivo', OLD.ruta_archivo, 'estado_envio', OLD.estado_envio, 'correo_destino', OLD.correo_destino, 'fecha_envio', OLD.fecha_envio, 'detalle_envio', OLD.detalle_envio, 'id_usuario_genera', OLD.id_usuario_genera, 'fecha_generacion', OLD.fecha_generacion, 'estado', OLD.estado), JSON_OBJECT('id_reporte_solicitud', NEW.id_reporte_solicitud, 'id_seguridad', NEW.id_seguridad, 'id_despacho_unidad', NEW.id_despacho_unidad, 'tipo_reporte', NEW.tipo_reporte, 'nombre_archivo', NEW.nombre_archivo, 'ruta_archivo', NEW.ruta_archivo, 'estado_envio', NEW.estado_envio, 'correo_destino', NEW.correo_destino, 'fecha_envio', NEW.fecha_envio, 'detalle_envio', NEW.detalle_envio, 'id_usuario_genera', NEW.id_usuario_genera, 'fecha_generacion', NEW.fecha_generacion, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;

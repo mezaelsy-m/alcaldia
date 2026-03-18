@@ -1,0 +1,8 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE tipos_ayuda_social
+SET nombre_tipo_ayuda = ?,
+    requiere_ambulancia = ?,
+    estado = ?,
+    fecha_registro = ?
+WHERE id_tipo_ayuda_social = ?;

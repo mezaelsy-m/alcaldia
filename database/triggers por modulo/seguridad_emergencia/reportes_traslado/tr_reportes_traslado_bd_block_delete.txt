@@ -1,0 +1,11 @@
+Explica: trigger BEFORE DELETE sobre la tabla reportes_traslado.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_reportes_traslado_bd_block_delete//
+CREATE TRIGGER tr_reportes_traslado_bd_block_delete BEFORE DELETE ON reportes_traslado
+FOR EACH ROW
+BEGIN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Eliminacion fisica bloqueada en tabla reportes_traslado. Use eliminacion logica.';
+END
+//
+DELIMITER ;

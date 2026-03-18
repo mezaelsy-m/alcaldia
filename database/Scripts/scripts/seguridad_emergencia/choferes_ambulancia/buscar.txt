@@ -1,0 +1,31 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_chofer_ambulancia,
+       id_empleado,
+       numero_licencia,
+       categoria_licencia,
+       vencimiento_licencia,
+       contacto_emergencia,
+       telefono_contacto_emergencia,
+       observaciones,
+       estado,
+       fecha_registro,
+       fecha_actualizacion
+FROM choferes_ambulancia
+WHERE id_chofer_ambulancia = ?;
+
+SQL (listado):
+SELECT id_chofer_ambulancia,
+       id_empleado,
+       numero_licencia,
+       categoria_licencia,
+       vencimiento_licencia,
+       contacto_emergencia,
+       telefono_contacto_emergencia,
+       observaciones,
+       estado,
+       fecha_registro,
+       fecha_actualizacion
+FROM choferes_ambulancia
+WHERE estado = 1
+ORDER BY id_chofer_ambulancia DESC;

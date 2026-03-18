@@ -1,0 +1,12 @@
+Explica: trigger AFTER INSERT sobre la tabla beneficiarios.
+SQL:
+DELIMITER //
+DROP TRIGGER IF EXISTS tr_beneficiarios_ai_audit//
+CREATE TRIGGER tr_beneficiarios_ai_audit AFTER INSERT ON beneficiarios
+FOR EACH ROW
+BEGIN
+  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
+  VALUES (NULL, 'beneficiarios', 'INSERT', CAST(NEW.id_beneficiario AS CHAR), 'INSERT en beneficiarios', 'Se inserto un registro en beneficiarios', NULL, JSON_OBJECT('id_beneficiario', NEW.id_beneficiario, 'nacionalidad', NEW.nacionalidad, 'cedula', NEW.cedula, 'nombre_beneficiario', NEW.nombre_beneficiario, 'telefono', NEW.telefono, 'id_comunidad', NEW.id_comunidad, 'comunidad', NEW.comunidad, 'fecha_registro', NEW.fecha_registro, 'hora_registro_12h', NEW.hora_registro_12h, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+END
+//
+DELIMITER ;
