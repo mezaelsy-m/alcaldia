@@ -51,6 +51,7 @@ $currentTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : "
 $headerCssVersion = @filemtime(__DIR__ . "/css/header-professional.css");
 $configCssVersion = @filemtime(__DIR__ . "/css/configuracion-maestra.css");
 $operativoCssVersion = @filemtime(__DIR__ . "/css/operativo-ambulancias.css");
+$faviconPath = "../assets/images/favicon.png";
 
 $menuItems = array(
     array("perm" => "Concepto", "href" => "concepto.php", "icon" => "fas fa-chart-pie", "label" => "Panel General"),
@@ -73,7 +74,7 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Panel institucional de la Sala Situacional de la Alcaldia de Libertador">
 
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars($faviconPath, ENT_QUOTES, "UTF-8"); ?>">
 
     <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="../assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">

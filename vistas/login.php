@@ -7,7 +7,7 @@
   <meta name="description" content="Portal de acceso a la Sala Situacional de la Alcaldia Bolivariana de Libertador">
   <title>Acceso | Sala Situacional Libertador</title>
 
-  <link rel="icon" type="image/x-icon" href="favicon.png">
+  <link rel="icon" type="image/x-icon" href="../assets/images/favicon.png">
   <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" href="css/login.css">
 </head>
