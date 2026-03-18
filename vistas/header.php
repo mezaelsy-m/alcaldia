@@ -141,7 +141,7 @@ $bottomAllowed = (isset($_SESSION["Concepto"]) && (int) $_SESSION["Concepto"] ==
             </a>
 
             <div class="sidebar">
-                <div class="sidebar-user-card">
+                <div class="sidebar-user-card mt-5">
                     <div class="sidebar-user-avatar">
                         <i class="fas fa-user-shield" aria-hidden="true"></i>
                     </div>
@@ -157,19 +157,6 @@ $bottomAllowed = (isset($_SESSION["Concepto"]) && (int) $_SESSION["Concepto"] ==
                     <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview"
                         role="menu" data-accordion="false">
                         <?php
-          if ($bottomAllowed) {
-              $bottomActiveMobile = $currentPage === $bottomMenuItem["href"];
-              ?>
-                        <li class="nav-item d-lg-none">
-                            <a href="<?php echo htmlspecialchars($bottomMenuItem["href"], ENT_QUOTES, "UTF-8"); ?>"
-                                class="nav-link<?php echo $bottomActiveMobile ? " active" : ""; ?>">
-                                <i
-                                    class="nav-icon <?php echo htmlspecialchars($bottomMenuItem["icon"], ENT_QUOTES, "UTF-8"); ?>"></i>
-                                <p><?php echo htmlspecialchars($bottomMenuItem["label"], ENT_QUOTES, "UTF-8"); ?></p>
-                            </a>
-                        </li>
-                        <?php
-          }
           $visibleItems = 0;
           foreach ($menuItems as $item) {
               $isAllowed = isset($_SESSION[$item["perm"]]) && (int) $_SESSION[$item["perm"]] === 1;
