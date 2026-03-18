@@ -199,6 +199,10 @@ function configurarEventos() {
         const id = $(this).data("id");
         cambiarEstadoBeneficiario(id, "desactivar", "eliminar");
     });
+
+    $("#beneficiarioModal").on("hidden.bs.modal", function () {
+        limpiarFormulario();
+    });
 }
 
 function abrirModalNuevo() {
@@ -360,16 +364,20 @@ function generarReporteRapido() {
     }
 
     const rows = tablaBeneficiarios.rows({ search: "applied" }).data().toArray();
-    let html = "";
+    let cuerpoTabla = "";
 
     for (let i = 0; i < rows.length; i += 1) {
-        html += "<tr>";
-        html += "<td>" + (rows[i].cedula_completa || "") + "</td>";
-        html += "<td>" + (rows[i].nombre_beneficiario || "") + "</td>";
-        html += "<td>" + (rows[i].telefono || "") + "</td>";
-        html += "<td>" + (rows[i].comunidad || "") + "</td>";
-        html += "<td>" + (rows[i].fecha_registro || "") + "</td>";
-        html += "</tr>";
+        cuerpoTabla += "<tr>";
+        cuerpoTabla += "<td>" + escaparHtmlReporteBeneficiarios(textoPlanoReporteBeneficiarios(rows[i].cedula_completa || "")) + "</td>";
+        cuerpoTabla += "<td>" + escaparHtmlReporteBeneficiarios(textoPlanoReporteBeneficiarios(rows[i].nombre_beneficiario || "")) + "</td>";
+        cuerpoTabla += "<td>" + escaparHtmlReporteBeneficiarios(textoPlanoReporteBeneficiarios(rows[i].telefono || "")) + "</td>";
+        cuerpoTabla += "<td>" + escaparHtmlReporteBeneficiarios(textoPlanoReporteBeneficiarios(rows[i].comunidad || "")) + "</td>";
+        cuerpoTabla += "<td>" + escaparHtmlReporteBeneficiarios(textoPlanoReporteBeneficiarios(rows[i].fecha_registro || "")) + "</td>";
+        cuerpoTabla += "</tr>";
+    }
+
+    if (cuerpoTabla === "") {
+        cuerpoTabla = '<tr><td colspan="5" class="reporte-vacio">No hay registros visibles para imprimir.</td></tr>';
     }
 
     const win = window.open("", "_blank");
@@ -378,20 +386,84 @@ function generarReporteRapido() {
         return;
     }
 
+    const contexto = obtenerContextoReporteBeneficiarios();
     win.document.write(
-        "<html><head><title>Reporte Beneficiarios</title><style>" +
-        "body{font-family:Arial,sans-serif;padding:20px;}h1{margin:0 0 14px;}table{width:100%;border-collapse:collapse;}" +
-        "th,td{border:1px solid #d6dee8;padding:8px;font-size:12px;}th{background:#eff4fa;}" +
-        "</style></head><body>" +
-        "<h1>Reporte de beneficiarios</h1>" +
-        "<p>Total visible: " + rows.length + "</p>" +
-        "<table><thead><tr><th>Cedula</th><th>Nombre</th><th>Telefono</th><th>Comunidad</th><th>Fecha</th></tr></thead><tbody>" +
-        html +
-        "</tbody></table></body></html>"
+        "<html><head><title>Reporte Beneficiarios</title><style>" + obtenerEstilosReporteBeneficiarios() + "</style></head><body>" +
+        '<main class="reporte-doc">' +
+        '<header class="reporte-header">' +
+        '<div class="reporte-logo"><img src="' + contexto.logo + '" alt="Logo institucional" onerror="this.style.display=\'none\'"></div>' +
+        '<div class="reporte-titulo">' +
+        '<span class="reporte-linea">' + contexto.institucion + "</span>" +
+        '<span class="reporte-linea">' + contexto.sistema + "</span>" +
+        "<h1>Reporte rapido de beneficiarios</h1>" +
+        "</div>" +
+        "</header>" +
+        '<section class="reporte-meta">' +
+        '<div class="reporte-meta-item"><span>Fecha</span><strong>' + contexto.fecha + "</strong></div>" +
+        '<div class="reporte-meta-item"><span>Hora</span><strong>' + contexto.hora + "</strong></div>" +
+        '<div class="reporte-meta-item"><span>Generado por</span><strong>' + contexto.usuario + "</strong></div>" +
+        '<div class="reporte-meta-item"><span>Total visible</span><strong>' + rows.length + "</strong></div>" +
+        "</section>" +
+        '<section class="reporte-tabla"><table><thead><tr><th>Cedula</th><th>Nombre</th><th>Telefono</th><th>Comunidad</th><th>Fecha</th></tr></thead><tbody>' +
+        cuerpoTabla +
+        "</tbody></table></section>" +
+        '<footer class="reporte-footer">Documento generado automaticamente por el sistema.</footer>' +
+        "</main>" +
+        "</body></html>"
     );
     win.document.close();
-    win.focus();
-    win.print();
+    win.onload = function () {
+        win.focus();
+        win.print();
+    };
+}
+
+function obtenerContextoReporteBeneficiarios() {
+    const ahora = new Date();
+    const ruta = window.location.pathname || "";
+    const indiceVistas = ruta.indexOf("/vistas/");
+    const base = indiceVistas >= 0 ? ruta.substring(0, indiceVistas) : "";
+    const institucion = $(".header-brand-copy span").first().text().trim() || "Alcaldia Municipal";
+    const sistema = $(".header-brand-copy strong").first().text().trim() || "Sala Situacional";
+    const usuario = $(".header-user-chip span").last().text().trim() || "Usuario del sistema";
+
+    return {
+        logo: window.location.origin + base + "/assets/images/logo_login.png",
+        institucion: escaparHtmlReporteBeneficiarios(institucion),
+        sistema: escaparHtmlReporteBeneficiarios(sistema),
+        usuario: escaparHtmlReporteBeneficiarios(usuario),
+        fecha: escaparHtmlReporteBeneficiarios(ahora.toLocaleDateString("es-VE")),
+        hora: escaparHtmlReporteBeneficiarios(ahora.toLocaleTimeString("es-VE", { hour: "2-digit", minute: "2-digit" }))
+    };
+}
+
+function obtenerEstilosReporteBeneficiarios() {
+    return "body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f4f7fb;color:#1f2d3d;margin:0;padding:24px;}" +
+        ".reporte-doc{max-width:1180px;margin:0 auto;background:#fff;border:1px solid #dce5f2;border-radius:14px;overflow:hidden;}" +
+        ".reporte-header{display:flex;gap:16px;align-items:center;padding:18px 22px;background:linear-gradient(120deg,#f8fbff,#edf4ff);border-bottom:2px solid #dce8fb;}" +
+        ".reporte-logo{width:74px;height:74px;border:1px solid #d9e3f2;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}" +
+        ".reporte-logo img{max-width:100%;max-height:100%;}" +
+        ".reporte-linea{display:block;font-size:12px;color:#5e6e86;line-height:1.35;}" +
+        ".reporte-titulo h1{margin:6px 0 0;font-size:20px;line-height:1.2;color:#1d2a3f;}" +
+        ".reporte-meta{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;padding:14px 22px;background:#fff;border-bottom:1px solid #e6edf8;}" +
+        ".reporte-meta-item{border:1px solid #e2eaf6;border-radius:10px;padding:8px 10px;background:#f9fbff;}" +
+        ".reporte-meta-item span{display:block;font-size:11px;color:#677a95;text-transform:uppercase;letter-spacing:.04em;}" +
+        ".reporte-meta-item strong{display:block;font-size:13px;color:#1f2d3d;margin-top:3px;}" +
+        ".reporte-tabla{padding:14px 22px 8px;}" +
+        ".reporte-tabla table{width:100%;border-collapse:collapse;}" +
+        ".reporte-tabla th,.reporte-tabla td{border:1px solid #d7e1ef;padding:8px;font-size:12px;vertical-align:top;text-align:left;}" +
+        ".reporte-tabla th{background:#eef4fd;color:#21324b;font-weight:600;}" +
+        ".reporte-vacio{text-align:center;font-style:italic;color:#7a879b;}" +
+        ".reporte-footer{padding:10px 22px 16px;font-size:11px;color:#71829d;}" +
+        "@media print{body{background:#fff;padding:0;} .reporte-doc{border:none;border-radius:0;}}";
+}
+
+function textoPlanoReporteBeneficiarios(valor) {
+    return $("<div>").html(valor || "").text().trim();
+}
+
+function escaparHtmlReporteBeneficiarios(valor) {
+    return $("<div>").text(valor || "").html();
 }
 
 $(document).ready(function () {

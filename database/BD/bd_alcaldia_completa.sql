@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-03-2026 a las 02:53:22
+-- Tiempo de generación: 18-03-2026 a las 16:12:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -100,7 +100,8 @@ CREATE TABLE `ayuda_social` (
 
 INSERT INTO `ayuda_social` (`id_ayuda`, `ticket_interno`, `id_beneficiario`, `id_usuario`, `id_tipo_ayuda_social`, `id_solicitud_ayuda_social`, `id_estado_solicitud`, `tipo_ayuda`, `solicitud_ayuda`, `fecha_ayuda`, `descripcion`, `estado`) VALUES
 (1, 'AYU-20260317-000001', 1, 1, 14, 2, 1, 'Reubicacion de insectos', 'Atencion al ciudadano', '2026-03-17', 'plaga de mosquitos', 1),
-(2, 'AYU-20260317-000002', 2, 1, 11, 1, 1, 'Riesgo de vias publicas', '1X10', '2026-03-17', 'Mucho baches en la via', 1);
+(2, 'AYU-20260317-000002', 2, 1, 11, 1, 1, 'Riesgo de vias publicas', '1X10', '2026-03-17', 'Mucho baches en la via', 1),
+(3, 'AYU-20260318-000003', 1, 1, 9, 2, 1, 'Hurto', 'Atencion al ciudadano', '2026-03-18', 'descripcion breve', 1);
 
 --
 -- Disparadores `ayuda_social`
@@ -326,7 +327,23 @@ INSERT INTO `bitacora` (`id_bitacora`, `id_usuario`, `tabla_afectada`, `accion`,
 (100, NULL, 'reportes_solicitudes_ambulancia', 'INSERT', '1', 'INSERT en reportes_solicitudes_ambulancia', 'Se inserto un registro en reportes_solicitudes_ambulancia', NULL, '{\"id_reporte_solicitud\": 1, \"id_seguridad\": 1, \"id_despacho_unidad\": 1, \"tipo_reporte\": \"REGISTRO\", \"nombre_archivo\": \"SEG-20260317-000001_registro_20260318_025024_1406.pdf\", \"ruta_archivo\": \"uploads/reportes_solicitudes_ambulancia/SEG-20260317-000001_registro_20260318_025024_1406.pdf\", \"estado_envio\": \"NO_APLICA\", \"correo_destino\": null, \"fecha_envio\": null, \"detalle_envio\": \"Envio no solicitado.\", \"id_usuario_genera\": 1, \"fecha_generacion\": \"2026-03-17 21:50:24\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 01:50:24', '2026-03-17 21:50:24', 1),
 (101, 1, 'SISTEMA', 'LEGACY', NULL, 'Operacion del sistema', 'INSERTAR Seguridad y Emergencia - Ticket: SEG-20260317-000001 - Estado: DESPACHADO', NULL, NULL, 'root@localhost', '127.0.0.1', '2026-03-18 01:50:24', '2026-03-17 21:50:24', 1),
 (102, NULL, 'reportes_solicitudes_ambulancia', 'UPDATE', '1', 'UPDATE en reportes_solicitudes_ambulancia', 'Se actualizo un registro en reportes_solicitudes_ambulancia', '{\"id_reporte_solicitud\": 1, \"id_seguridad\": 1, \"id_despacho_unidad\": 1, \"tipo_reporte\": \"REGISTRO\", \"nombre_archivo\": \"SEG-20260317-000001_registro_20260318_025024_1406.pdf\", \"ruta_archivo\": \"uploads/reportes_solicitudes_ambulancia/SEG-20260317-000001_registro_20260318_025024_1406.pdf\", \"estado_envio\": \"NO_APLICA\", \"correo_destino\": null, \"fecha_envio\": null, \"detalle_envio\": \"Envio no solicitado.\", \"id_usuario_genera\": 1, \"fecha_generacion\": \"2026-03-17 21:50:24\", \"estado\": 1}', '{\"id_reporte_solicitud\": 1, \"id_seguridad\": 1, \"id_despacho_unidad\": 1, \"tipo_reporte\": \"REGISTRO\", \"nombre_archivo\": \"SEG-20260317-000001_registro_20260318_025024_1406.pdf\", \"ruta_archivo\": \"uploads/reportes_solicitudes_ambulancia/SEG-20260317-000001_registro_20260318_025024_1406.pdf\", \"estado_envio\": \"ENVIADO\", \"correo_destino\": \"meza.elsy@gmail.com\", \"fecha_envio\": \"2026-03-18 02:50:53\", \"detalle_envio\": \"Reporte enviado correctamente al correo del chofer con archivo adjunto.\", \"id_usuario_genera\": 1, \"fecha_generacion\": \"2026-03-17 21:50:24\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 01:50:53', '2026-03-17 21:50:53', 1),
-(103, 1, 'SISTEMA', 'LEGACY', NULL, 'Operacion del sistema', 'REENVIAR reporte al correo del chofer en solicitud ID 1', NULL, NULL, 'root@localhost', '127.0.0.1', '2026-03-18 01:50:53', '2026-03-17 21:50:53', 1);
+(103, 1, 'SISTEMA', 'LEGACY', NULL, 'Operacion del sistema', 'REENVIAR reporte al correo del chofer en solicitud ID 1', NULL, NULL, 'root@localhost', '127.0.0.1', '2026-03-18 01:50:53', '2026-03-17 21:50:53', 1),
+(104, NULL, 'usuarios_seguridad_acceso', 'UPDATE', '1', 'UPDATE en usuarios_seguridad_acceso', 'Se actualizo un registro en usuarios_seguridad_acceso', '{\"id_usuario\": 1, \"intentos_fallidos\": 0, \"bloqueado\": 0, \"fecha_bloqueo\": null, \"password_temporal\": 0, \"fecha_password_temporal\": null, \"fecha_actualizacion\": \"2026-03-17 20:34:52\"}', '{\"id_usuario\": 1, \"intentos_fallidos\": 0, \"bloqueado\": 0, \"fecha_bloqueo\": null, \"password_temporal\": 0, \"fecha_password_temporal\": null, \"fecha_actualizacion\": \"2026-03-17 22:21:17\"}', 'root@localhost', '127.0.0.1', '2026-03-18 02:21:17', '2026-03-17 22:21:17', 1),
+(105, NULL, 'usuarios_seguridad_acceso', 'UPDATE', '2', 'UPDATE en usuarios_seguridad_acceso', 'Se actualizo un registro en usuarios_seguridad_acceso', '{\"id_usuario\": 2, \"intentos_fallidos\": 0, \"bloqueado\": 0, \"fecha_bloqueo\": null, \"password_temporal\": 0, \"fecha_password_temporal\": null, \"fecha_actualizacion\": \"2026-03-17 21:22:18\"}', '{\"id_usuario\": 2, \"intentos_fallidos\": 0, \"bloqueado\": 0, \"fecha_bloqueo\": null, \"password_temporal\": 0, \"fecha_password_temporal\": null, \"fecha_actualizacion\": \"2026-03-17 22:31:18\"}', 'root@localhost', '127.0.0.1', '2026-03-18 02:31:18', '2026-03-17 22:31:18', 1),
+(106, NULL, 'usuarios_seguridad_acceso', 'UPDATE', '1', 'UPDATE en usuarios_seguridad_acceso', 'Se actualizo un registro en usuarios_seguridad_acceso', '{\"id_usuario\": 1, \"intentos_fallidos\": 0, \"bloqueado\": 0, \"fecha_bloqueo\": null, \"password_temporal\": 0, \"fecha_password_temporal\": null, \"fecha_actualizacion\": \"2026-03-17 20:34:52\"}', '{\"id_usuario\": 1, \"intentos_fallidos\": 0, \"bloqueado\": 0, \"fecha_bloqueo\": null, \"password_temporal\": 0, \"fecha_password_temporal\": null, \"fecha_actualizacion\": \"2026-03-18 09:11:11\"}', 'root@localhost', '127.0.0.1', '2026-03-18 13:11:11', '2026-03-18 09:11:11', 1),
+(107, NULL, 'seguridad', 'INSERT', '2', 'INSERT en seguridad', 'Se inserto un registro en seguridad', NULL, '{\"id_seguridad\": 2, \"ticket_interno\": \"\", \"id_beneficiario\": 2, \"id_usuario\": 1, \"id_tipo_seguridad\": 7, \"id_solicitud_seguridad\": 1, \"id_estado_solicitud\": 1, \"tipo_seguridad\": \"Atencion prehospitalaria\", \"tipo_solicitud\": \"1X10\", \"fecha_seguridad\": \"2026-03-18 09:28:00\", \"descripcion\": \"S/E\", \"estado_atencion\": \"REGISTRADO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"referencia_evento\": \"fente a barrio bueno\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:39', '2026-03-18 09:29:39', 1),
+(108, NULL, 'seguridad', 'UPDATE', '2', 'UPDATE en seguridad', 'Se actualizo un registro en seguridad', '{\"id_seguridad\": 2, \"ticket_interno\": \"\", \"id_beneficiario\": 2, \"id_usuario\": 1, \"id_tipo_seguridad\": 7, \"id_solicitud_seguridad\": 1, \"id_estado_solicitud\": 1, \"tipo_seguridad\": \"Atencion prehospitalaria\", \"tipo_solicitud\": \"1X10\", \"fecha_seguridad\": \"2026-03-18 09:28:00\", \"descripcion\": \"S/E\", \"estado_atencion\": \"REGISTRADO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"referencia_evento\": \"fente a barrio bueno\", \"estado\": 1}', '{\"id_seguridad\": 2, \"ticket_interno\": \"SEG-20260318-000002\", \"id_beneficiario\": 2, \"id_usuario\": 1, \"id_tipo_seguridad\": 7, \"id_solicitud_seguridad\": 1, \"id_estado_solicitud\": 1, \"tipo_seguridad\": \"Atencion prehospitalaria\", \"tipo_solicitud\": \"1X10\", \"fecha_seguridad\": \"2026-03-18 09:28:00\", \"descripcion\": \"S/E\", \"estado_atencion\": \"REGISTRADO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"referencia_evento\": \"fente a barrio bueno\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:39', '2026-03-18 09:29:39', 1),
+(109, NULL, 'unidades', 'UPDATE', '2', 'UPDATE en unidades', 'Se actualizo un registro en unidades', '{\"id_unidad\": 2, \"codigo_unidad\": \"AMB-002\", \"descripcion\": \"AMBULANCIA 0800 BIGOTE\", \"placa\": \"IUT-OYUP9\", \"estado\": 1, \"estado_operativo\": \"DISPONIBLE\", \"ubicacion_actual\": \"FLOR AMARILLO\", \"referencia_actual\": \"FLOR AMARILLO\", \"prioridad_despacho\": 1, \"fecha_actualizacion_operativa\": \"2026-03-17 21:49:34\"}', '{\"id_unidad\": 2, \"codigo_unidad\": \"AMB-002\", \"descripcion\": \"AMBULANCIA 0800 BIGOTE\", \"placa\": \"IUT-OYUP9\", \"estado\": 1, \"estado_operativo\": \"EN_SERVICIO\", \"ubicacion_actual\": \"FLOR AMARILLO\", \"referencia_actual\": \"FLOR AMARILLO\", \"prioridad_despacho\": 1, \"fecha_actualizacion_operativa\": \"2026-03-18 09:29:39\"}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:39', '2026-03-18 09:29:39', 1),
+(110, NULL, 'despachos_unidades', 'INSERT', '2', 'INSERT en despachos_unidades', 'Se inserto un registro en despachos_unidades', NULL, '{\"id_despacho_unidad\": 2, \"id_seguridad\": 2, \"id_unidad\": 2, \"id_chofer_ambulancia\": 2, \"id_usuario_asigna\": 1, \"modo_asignacion\": \"AUTO\", \"estado_despacho\": \"ACTIVO\", \"fecha_asignacion\": \"2026-03-18 09:29:39\", \"fecha_cierre\": null, \"ubicacion_salida\": \"FLOR AMARILLO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"ubicacion_cierre\": null, \"observaciones\": \"Asignacion automatica al guardar la solicitud.\", \"fecha_registro\": \"2026-03-18 09:29:39\", \"fecha_actualizacion\": \"2026-03-18 09:29:39\"}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:39', '2026-03-18 09:29:39', 1),
+(111, NULL, 'seguridad', 'UPDATE', '2', 'UPDATE en seguridad', 'Se actualizo un registro en seguridad', '{\"id_seguridad\": 2, \"ticket_interno\": \"SEG-20260318-000002\", \"id_beneficiario\": 2, \"id_usuario\": 1, \"id_tipo_seguridad\": 7, \"id_solicitud_seguridad\": 1, \"id_estado_solicitud\": 1, \"tipo_seguridad\": \"Atencion prehospitalaria\", \"tipo_solicitud\": \"1X10\", \"fecha_seguridad\": \"2026-03-18 09:28:00\", \"descripcion\": \"S/E\", \"estado_atencion\": \"REGISTRADO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"referencia_evento\": \"fente a barrio bueno\", \"estado\": 1}', '{\"id_seguridad\": 2, \"ticket_interno\": \"SEG-20260318-000002\", \"id_beneficiario\": 2, \"id_usuario\": 1, \"id_tipo_seguridad\": 7, \"id_solicitud_seguridad\": 1, \"id_estado_solicitud\": 1, \"tipo_seguridad\": \"Atencion prehospitalaria\", \"tipo_solicitud\": \"1X10\", \"fecha_seguridad\": \"2026-03-18 09:28:00\", \"descripcion\": \"S/E\", \"estado_atencion\": \"DESPACHADO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"referencia_evento\": \"fente a barrio bueno\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:39', '2026-03-18 09:29:39', 1),
+(112, NULL, 'seguridad', 'UPDATE', '2', 'UPDATE en seguridad', 'Se actualizo un registro en seguridad', '{\"id_seguridad\": 2, \"ticket_interno\": \"SEG-20260318-000002\", \"id_beneficiario\": 2, \"id_usuario\": 1, \"id_tipo_seguridad\": 7, \"id_solicitud_seguridad\": 1, \"id_estado_solicitud\": 1, \"tipo_seguridad\": \"Atencion prehospitalaria\", \"tipo_solicitud\": \"1X10\", \"fecha_seguridad\": \"2026-03-18 09:28:00\", \"descripcion\": \"S/E\", \"estado_atencion\": \"DESPACHADO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"referencia_evento\": \"fente a barrio bueno\", \"estado\": 1}', '{\"id_seguridad\": 2, \"ticket_interno\": \"SEG-20260318-000002\", \"id_beneficiario\": 2, \"id_usuario\": 1, \"id_tipo_seguridad\": 7, \"id_solicitud_seguridad\": 1, \"id_estado_solicitud\": 2, \"tipo_seguridad\": \"Atencion prehospitalaria\", \"tipo_solicitud\": \"1X10\", \"fecha_seguridad\": \"2026-03-18 09:28:00\", \"descripcion\": \"S/E\", \"estado_atencion\": \"DESPACHADO\", \"ubicacion_evento\": \"comunidad los chirritos\", \"referencia_evento\": \"fente a barrio bueno\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:39', '2026-03-18 09:29:39', 1),
+(113, NULL, 'seguimientos_solicitudes', 'INSERT', '2', 'INSERT en seguimientos_solicitudes', 'Se inserto un registro en seguimientos_solicitudes', NULL, '{\"id_seguimiento_solicitud\": 2, \"modulo\": \"SEGURIDAD\", \"id_referencia\": 2, \"id_estado_solicitud\": 2, \"id_usuario\": 1, \"fecha_gestion\": \"2026-03-18 09:28:00\", \"observacion\": \"Solicitud en gestion operativa con unidad y chofer asignados.\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:39', '2026-03-18 09:29:39', 1),
+(114, NULL, 'reportes_solicitudes_ambulancia', 'INSERT', '2', 'INSERT en reportes_solicitudes_ambulancia', 'Se inserto un registro en reportes_solicitudes_ambulancia', NULL, '{\"id_reporte_solicitud\": 2, \"id_seguridad\": 2, \"id_despacho_unidad\": 2, \"tipo_reporte\": \"REGISTRO\", \"nombre_archivo\": \"SEG-20260318-000002_registro_20260318_142939_2281.pdf\", \"ruta_archivo\": \"uploads/reportes_solicitudes_ambulancia/SEG-20260318-000002_registro_20260318_142939_2281.pdf\", \"estado_envio\": \"ENVIADO\", \"correo_destino\": \"flaura2705@gmail.com\", \"fecha_envio\": \"2026-03-18 14:29:46\", \"detalle_envio\": \"Reporte enviado correctamente al correo del chofer con archivo adjunto.\", \"id_usuario_genera\": 1, \"fecha_generacion\": \"2026-03-18 09:29:46\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 13:29:46', '2026-03-18 09:29:46', 1),
+(115, 1, 'SISTEMA', 'LEGACY', NULL, 'Operacion del sistema', 'INSERTAR Seguridad y Emergencia - Ticket: SEG-20260318-000002 - Estado: DESPACHADO', NULL, NULL, 'root@localhost', '127.0.0.1', '2026-03-18 13:29:46', '2026-03-18 09:29:46', 1),
+(116, NULL, 'ayuda_social', 'INSERT', '3', 'INSERT en ayuda_social', 'Se inserto un registro en ayuda_social', NULL, '{\"id_ayuda\": 3, \"ticket_interno\": \"\", \"id_beneficiario\": 1, \"id_usuario\": 1, \"id_tipo_ayuda_social\": 9, \"id_solicitud_ayuda_social\": 2, \"id_estado_solicitud\": 1, \"tipo_ayuda\": \"Hurto\", \"solicitud_ayuda\": \"Atencion al ciudadano\", \"fecha_ayuda\": \"2026-03-18\", \"descripcion\": \"descripcion breve\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 14:36:00', '2026-03-18 10:36:00', 1),
+(117, NULL, 'ayuda_social', 'UPDATE', '3', 'UPDATE en ayuda_social', 'Se actualizo un registro en ayuda_social', '{\"id_ayuda\": 3, \"ticket_interno\": \"\", \"id_beneficiario\": 1, \"id_usuario\": 1, \"id_tipo_ayuda_social\": 9, \"id_solicitud_ayuda_social\": 2, \"id_estado_solicitud\": 1, \"tipo_ayuda\": \"Hurto\", \"solicitud_ayuda\": \"Atencion al ciudadano\", \"fecha_ayuda\": \"2026-03-18\", \"descripcion\": \"descripcion breve\", \"estado\": 1}', '{\"id_ayuda\": 3, \"ticket_interno\": \"AYU-20260318-000003\", \"id_beneficiario\": 1, \"id_usuario\": 1, \"id_tipo_ayuda_social\": 9, \"id_solicitud_ayuda_social\": 2, \"id_estado_solicitud\": 1, \"tipo_ayuda\": \"Hurto\", \"solicitud_ayuda\": \"Atencion al ciudadano\", \"fecha_ayuda\": \"2026-03-18\", \"descripcion\": \"descripcion breve\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 14:36:00', '2026-03-18 10:36:00', 1),
+(118, NULL, 'seguimientos_solicitudes', 'INSERT', '3', 'INSERT en seguimientos_solicitudes', 'Se inserto un registro en seguimientos_solicitudes', NULL, '{\"id_seguimiento_solicitud\": 3, \"modulo\": \"AYUDA_SOCIAL\", \"id_referencia\": 3, \"id_estado_solicitud\": 1, \"id_usuario\": 1, \"fecha_gestion\": \"2026-03-18 08:00:00\", \"observacion\": \"Solicitud registrada en ayuda social.\", \"estado\": 1}', 'root@localhost', '127.0.0.1', '2026-03-18 14:36:00', '2026-03-18 10:36:00', 1),
+(119, 1, 'SISTEMA', 'LEGACY', NULL, 'Operacion del sistema', 'INSERTAR Ayuda Social - Beneficiario: 1 - Tipo ID: 9 - Solicitud ID: 2', NULL, NULL, 'root@localhost', '127.0.0.1', '2026-03-18 14:36:00', '2026-03-18 10:36:00', 1);
 
 --
 -- Disparadores `bitacora`
@@ -726,7 +743,8 @@ CREATE TABLE `despachos_unidades` (
 --
 
 INSERT INTO `despachos_unidades` (`id_despacho_unidad`, `id_seguridad`, `id_unidad`, `id_chofer_ambulancia`, `id_usuario_asigna`, `modo_asignacion`, `estado_despacho`, `fecha_asignacion`, `fecha_cierre`, `ubicacion_salida`, `ubicacion_evento`, `ubicacion_cierre`, `observaciones`, `fecha_registro`, `fecha_actualizacion`) VALUES
-(1, 1, 1, 1, 1, 'AUTO', 'ACTIVO', '2026-03-17 21:50:24', NULL, 'BASE CENTRAL', 'AV principal', NULL, 'Asignacion automatica al guardar la solicitud.', '2026-03-17 21:50:24', '2026-03-17 21:50:24');
+(1, 1, 1, 1, 1, 'AUTO', 'ACTIVO', '2026-03-17 21:50:24', NULL, 'BASE CENTRAL', 'AV principal', NULL, 'Asignacion automatica al guardar la solicitud.', '2026-03-17 21:50:24', '2026-03-17 21:50:24'),
+(2, 2, 2, 2, 1, 'AUTO', 'ACTIVO', '2026-03-18 09:29:39', NULL, 'FLOR AMARILLO', 'comunidad los chirritos', NULL, 'Asignacion automatica al guardar la solicitud.', '2026-03-18 09:29:39', '2026-03-18 09:29:39');
 
 --
 -- Disparadores `despachos_unidades`
@@ -932,7 +950,8 @@ CREATE TABLE `reportes_solicitudes_ambulancia` (
 --
 
 INSERT INTO `reportes_solicitudes_ambulancia` (`id_reporte_solicitud`, `id_seguridad`, `id_despacho_unidad`, `tipo_reporte`, `nombre_archivo`, `ruta_archivo`, `estado_envio`, `correo_destino`, `fecha_envio`, `detalle_envio`, `id_usuario_genera`, `fecha_generacion`, `estado`) VALUES
-(1, 1, 1, 'REGISTRO', 'SEG-20260317-000001_registro_20260318_025024_1406.pdf', 'uploads/reportes_solicitudes_ambulancia/SEG-20260317-000001_registro_20260318_025024_1406.pdf', 'ENVIADO', 'meza.elsy@gmail.com', '2026-03-18 02:50:53', 'Reporte enviado correctamente al correo del chofer con archivo adjunto.', 1, '2026-03-17 21:50:24', 1);
+(1, 1, 1, 'REGISTRO', 'SEG-20260317-000001_registro_20260318_025024_1406.pdf', 'uploads/reportes_solicitudes_ambulancia/SEG-20260317-000001_registro_20260318_025024_1406.pdf', 'ENVIADO', 'meza.elsy@gmail.com', '2026-03-18 02:50:53', 'Reporte enviado correctamente al correo del chofer con archivo adjunto.', 1, '2026-03-17 21:50:24', 1),
+(2, 2, 2, 'REGISTRO', 'SEG-20260318-000002_registro_20260318_142939_2281.pdf', 'uploads/reportes_solicitudes_ambulancia/SEG-20260318-000002_registro_20260318_142939_2281.pdf', 'ENVIADO', 'flaura2705@gmail.com', '2026-03-18 14:29:46', 'Reporte enviado correctamente al correo del chofer con archivo adjunto.', 1, '2026-03-18 09:29:46', 1);
 
 --
 -- Disparadores `reportes_solicitudes_ambulancia`
@@ -1027,7 +1046,9 @@ CREATE TABLE `seguimientos_solicitudes` (
 --
 
 INSERT INTO `seguimientos_solicitudes` (`id_seguimiento_solicitud`, `modulo`, `id_referencia`, `id_estado_solicitud`, `id_usuario`, `fecha_gestion`, `observacion`, `estado`) VALUES
-(1, 'SEGURIDAD', 1, 2, 1, '2026-03-17 21:49:00', 'Solicitud en gestion operativa con unidad y chofer asignados.', 1);
+(1, 'SEGURIDAD', 1, 2, 1, '2026-03-17 21:49:00', 'Solicitud en gestion operativa con unidad y chofer asignados.', 1),
+(2, 'SEGURIDAD', 2, 2, 1, '2026-03-18 09:28:00', 'Solicitud en gestion operativa con unidad y chofer asignados.', 1),
+(3, 'AYUDA_SOCIAL', 3, 1, 1, '2026-03-18 08:00:00', 'Solicitud registrada en ayuda social.', 1);
 
 --
 -- Disparadores `seguimientos_solicitudes`
@@ -1082,7 +1103,8 @@ CREATE TABLE `seguridad` (
 --
 
 INSERT INTO `seguridad` (`id_seguridad`, `ticket_interno`, `id_beneficiario`, `id_usuario`, `id_tipo_seguridad`, `id_solicitud_seguridad`, `id_estado_solicitud`, `tipo_seguridad`, `tipo_solicitud`, `fecha_seguridad`, `descripcion`, `estado_atencion`, `ubicacion_evento`, `referencia_evento`, `estado`) VALUES
-(1, 'SEG-20260317-000001', 1, 1, 7, 1, 2, 'Atencion prehospitalaria', '1X10', '2026-03-17 21:49:00', 'S/E', 'DESPACHADO', 'AV principal', 'Autopista', 1);
+(1, 'SEG-20260317-000001', 1, 1, 7, 1, 2, 'Atencion prehospitalaria', '1X10', '2026-03-17 21:49:00', 'S/E', 'DESPACHADO', 'AV principal', 'Autopista', 1),
+(2, 'SEG-20260318-000002', 2, 1, 7, 1, 2, 'Atencion prehospitalaria', '1X10', '2026-03-18 09:28:00', 'S/E', 'DESPACHADO', 'comunidad los chirritos', 'fente a barrio bueno', 1);
 
 --
 -- Disparadores `seguridad`
@@ -1399,7 +1421,7 @@ CREATE TABLE `unidades` (
 
 INSERT INTO `unidades` (`id_unidad`, `codigo_unidad`, `descripcion`, `placa`, `estado`, `estado_operativo`, `ubicacion_actual`, `referencia_actual`, `prioridad_despacho`, `fecha_actualizacion_operativa`) VALUES
 (1, 'AMB-001', 'AMBULANCIA FORD', '14M-14K', 1, 'EN_SERVICIO', 'BASE CENTRAL', 'FRENTE AL CDI', 1, '2026-03-17 21:50:24'),
-(2, 'AMB-002', 'AMBULANCIA 0800 BIGOTE', 'IUT-OYUP9', 1, 'DISPONIBLE', 'FLOR AMARILLO', 'FLOR AMARILLO', 1, '2026-03-17 21:49:34');
+(2, 'AMB-002', 'AMBULANCIA 0800 BIGOTE', 'IUT-OYUP9', 1, 'EN_SERVICIO', 'FLOR AMARILLO', 'FLOR AMARILLO', 1, '2026-03-18 09:29:39');
 
 --
 -- Disparadores `unidades`
@@ -1434,7 +1456,6 @@ DELIMITER ;
 CREATE TABLE `usuarios` (
   `id_usuario` int(11) NOT NULL COMMENT 'Clave primaria: Identificador único del sistema',
   `id_empleado` int(11) NOT NULL COMMENT 'Campo id_empleado de la tabla usuarios.',
-  `id_dependencia` int(11) NOT NULL COMMENT 'FK: Vincula al usuario con su oficina de adscripción',
   `usuario` varchar(50) NOT NULL COMMENT 'Campo usuario de la tabla usuarios.',
   `password` varchar(64) NOT NULL COMMENT 'Campo password de la tabla usuarios.',
   `rol` enum('ADMIN','OPERADOR','CONSULTOR') DEFAULT 'OPERADOR' COMMENT 'Nivel de acceso: ADMIN(Total), OPERADOR(Escritura), CONSULTOR(Lectura)',
@@ -1445,24 +1466,93 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `id_empleado`, `id_dependencia`, `usuario`, `password`, `rol`, `estado`) VALUES
-(1, 1, 6, 'admin', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 'ADMIN', 1),
-(2, 2, 4, 'laura', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 'OPERADOR', 1);
+INSERT INTO `usuarios` (`id_usuario`, `id_empleado`, `usuario`, `password`, `rol`, `estado`) VALUES
+(1, 1, 'admin', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 'ADMIN', 1),
+(2, 2, 'laura', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 'OPERADOR', 1);
 
 --
 -- Disparadores `usuarios`
 --
 DELIMITER $$
 CREATE TRIGGER `tr_usuarios_ai_audit` AFTER INSERT ON `usuarios` FOR EACH ROW BEGIN
-  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
-  VALUES (NULL, 'usuarios', 'INSERT', CAST(NEW.id_usuario AS CHAR), 'INSERT en usuarios', 'Se inserto un registro en usuarios', NULL, JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'id_dependencia', NEW.id_dependencia, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+  INSERT INTO bitacora (
+      id_usuario,
+      tabla_afectada,
+      accion,
+      id_registro,
+      resumen,
+      detalle,
+      datos_antes,
+      datos_despues,
+      usuario_bd,
+      fecha_evento,
+      estado
+  )
+  VALUES (
+      NULL,
+      'usuarios',
+      'INSERT',
+      CAST(NEW.id_usuario AS CHAR),
+      'INSERT en usuarios',
+      'Se inserto un registro en usuarios',
+      NULL,
+      JSON_OBJECT(
+          'id_usuario', NEW.id_usuario,
+          'id_empleado', NEW.id_empleado,
+          'usuario', NEW.usuario,
+          'password', NEW.password,
+          'rol', NEW.rol,
+          'estado', NEW.estado
+      ),
+      CURRENT_USER(),
+      NOW(),
+      1
+  );
 END
 $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_usuarios_au_audit` AFTER UPDATE ON `usuarios` FOR EACH ROW BEGIN
-  INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
-  VALUES (NULL, 'usuarios', 'UPDATE', CAST(NEW.id_usuario AS CHAR), 'UPDATE en usuarios', 'Se actualizo un registro en usuarios', JSON_OBJECT('id_usuario', OLD.id_usuario, 'id_empleado', OLD.id_empleado, 'id_dependencia', OLD.id_dependencia, 'usuario', OLD.usuario, 'password', OLD.password, 'rol', OLD.rol, 'estado', OLD.estado), JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'id_dependencia', NEW.id_dependencia, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+  INSERT INTO bitacora (
+      id_usuario,
+      tabla_afectada,
+      accion,
+      id_registro,
+      resumen,
+      detalle,
+      datos_antes,
+      datos_despues,
+      usuario_bd,
+      fecha_evento,
+      estado
+  )
+  VALUES (
+      NULL,
+      'usuarios',
+      'UPDATE',
+      CAST(NEW.id_usuario AS CHAR),
+      'UPDATE en usuarios',
+      'Se actualizo un registro en usuarios',
+      JSON_OBJECT(
+          'id_usuario', OLD.id_usuario,
+          'id_empleado', OLD.id_empleado,
+          'usuario', OLD.usuario,
+          'password', OLD.password,
+          'rol', OLD.rol,
+          'estado', OLD.estado
+      ),
+      JSON_OBJECT(
+          'id_usuario', NEW.id_usuario,
+          'id_empleado', NEW.id_empleado,
+          'usuario', NEW.usuario,
+          'password', NEW.password,
+          'rol', NEW.rol,
+          'estado', NEW.estado
+      ),
+      CURRENT_USER(),
+      NOW(),
+      1
+  );
 END
 $$
 DELIMITER ;
@@ -1783,8 +1873,7 @@ ALTER TABLE `unidades`
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `usuario` (`usuario`),
-  ADD KEY `fk_user_emp` (`id_empleado`),
-  ADD KEY `fk_user_dep` (`id_dependencia`);
+  ADD KEY `fk_user_emp` (`id_empleado`);
 
 --
 -- Indices de la tabla `usuarios_seguridad_acceso`
@@ -1816,7 +1905,7 @@ ALTER TABLE `asignaciones_unidades_choferes`
 -- AUTO_INCREMENT de la tabla `ayuda_social`
 --
 ALTER TABLE `ayuda_social`
-  MODIFY `id_ayuda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Número correlativo de la solicitud', AUTO_INCREMENT=3;
+  MODIFY `id_ayuda` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Número correlativo de la solicitud', AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `beneficiarios`
@@ -1828,7 +1917,7 @@ ALTER TABLE `beneficiarios`
 -- AUTO_INCREMENT de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
-  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_bitacora de la tabla bitacora.', AUTO_INCREMENT=104;
+  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_bitacora de la tabla bitacora.', AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT de la tabla `choferes_ambulancia`
@@ -1858,7 +1947,7 @@ ALTER TABLE `dependencias`
 -- AUTO_INCREMENT de la tabla `despachos_unidades`
 --
 ALTER TABLE `despachos_unidades`
-  MODIFY `id_despacho_unidad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_despacho_unidad de la tabla despachos_unidades.', AUTO_INCREMENT=2;
+  MODIFY `id_despacho_unidad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_despacho_unidad de la tabla despachos_unidades.', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `empleados`
@@ -1882,7 +1971,7 @@ ALTER TABLE `permisos`
 -- AUTO_INCREMENT de la tabla `reportes_solicitudes_ambulancia`
 --
 ALTER TABLE `reportes_solicitudes_ambulancia`
-  MODIFY `id_reporte_solicitud` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_reporte_solicitud de la tabla reportes_solicitudes_ambulancia.', AUTO_INCREMENT=2;
+  MODIFY `id_reporte_solicitud` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_reporte_solicitud de la tabla reportes_solicitudes_ambulancia.', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `reportes_traslado`
@@ -1894,13 +1983,13 @@ ALTER TABLE `reportes_traslado`
 -- AUTO_INCREMENT de la tabla `seguimientos_solicitudes`
 --
 ALTER TABLE `seguimientos_solicitudes`
-  MODIFY `id_seguimiento_solicitud` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_seguimiento_solicitud de la tabla seguimientos_solicitudes.', AUTO_INCREMENT=2;
+  MODIFY `id_seguimiento_solicitud` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_seguimiento_solicitud de la tabla seguimientos_solicitudes.', AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `seguridad`
 --
 ALTER TABLE `seguridad`
-  MODIFY `id_seguridad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_seguridad de la tabla seguridad.', AUTO_INCREMENT=2;
+  MODIFY `id_seguridad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo id_seguridad de la tabla seguridad.', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios_publicos`
@@ -2060,7 +2149,6 @@ ALTER TABLE `servicios_publicos`
 -- Filtros para la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD CONSTRAINT `fk_user_dep` FOREIGN KEY (`id_dependencia`) REFERENCES `dependencias` (`id_dependencia`),
   ADD CONSTRAINT `fk_user_emp` FOREIGN KEY (`id_empleado`) REFERENCES `empleados` (`id_empleado`);
 
 --
