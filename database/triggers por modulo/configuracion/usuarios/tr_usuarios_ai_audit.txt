@@ -6,7 +6,7 @@ CREATE TRIGGER tr_usuarios_ai_audit AFTER INSERT ON usuarios
 FOR EACH ROW
 BEGIN
   INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
-  VALUES (NULL, 'usuarios', 'INSERT', CAST(NEW.id_usuario AS CHAR), 'INSERT en usuarios', 'Se inserto un registro en usuarios', NULL, JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'id_dependencia', NEW.id_dependencia, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+  VALUES (NULL, 'usuarios', 'INSERT', CAST(NEW.id_usuario AS CHAR), 'INSERT en usuarios', 'Se inserto un registro en usuarios', NULL, JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
 END
 //
 DELIMITER ;

@@ -13,8 +13,8 @@ WHERE usuario = 'maestro';
 SELECT * FROM usuarios WHERE usuario = 'prueba';
 
 -- Paso 3: Si necesitas crear un nuevo usuario admin (opcional)
-INSERT INTO usuarios (id_empleado, id_dependencia, usuario, password, rol, estado) 
-VALUES (1, 1, 'prueba', SHA2('prueba', 256), 'ADMIN', '1');
+INSERT INTO usuarios (id_empleado, usuario, password, rol, estado) 
+VALUES (1, 'prueba', SHA2('prueba', 256), 'ADMIN', '1');
 
 -- Paso 4: Verificar todos los usuarios
 SELECT id_usuario, usuario, rol, estado FROM usuarios ORDER BY id_usuario;

@@ -82,7 +82,6 @@ class Usuarios
 
         $sql = "SELECT u.id_usuario,
                        u.id_empleado,
-                       u.id_dependencia,
                        u.usuario,
                        u.password,
                        u.rol,
@@ -526,7 +525,6 @@ class Usuarios
 
         $sql = "SELECT u.id_usuario,
                        u.id_empleado,
-                       u.id_dependencia,
                        u.usuario,
                        u.password,
                        u.rol,
@@ -779,14 +777,12 @@ class Usuarios
             $hash = hash("sha256", (string) $payload["password"]);
             $sqlUsuario = "INSERT INTO usuarios (
                                id_empleado,
-                               id_dependencia,
                                usuario,
                                password,
                                rol,
                                estado
                            ) VALUES (
                                '" . (int) $idEmpleado . "',
-                               '" . (int) $idDependencia . "',
                                '" . $this->esc($payload["usuario"]) . "',
                                '" . $this->esc($hash) . "',
                                'ADMIN',

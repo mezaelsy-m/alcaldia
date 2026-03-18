@@ -395,13 +395,13 @@ DROP TRIGGER IF EXISTS tr_usuarios_ai_audit//
 CREATE TRIGGER tr_usuarios_ai_audit AFTER INSERT ON usuarios FOR EACH ROW
 BEGIN
   INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
-  VALUES (NULL, 'usuarios', 'INSERT', CAST(NEW.id_usuario AS CHAR), 'INSERT en usuarios', 'Se inserto un registro en usuarios', NULL, JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'id_dependencia', NEW.id_dependencia, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+  VALUES (NULL, 'usuarios', 'INSERT', CAST(NEW.id_usuario AS CHAR), 'INSERT en usuarios', 'Se inserto un registro en usuarios', NULL, JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
 END//
 DROP TRIGGER IF EXISTS tr_usuarios_au_audit//
 CREATE TRIGGER tr_usuarios_au_audit AFTER UPDATE ON usuarios FOR EACH ROW
 BEGIN
   INSERT INTO bitacora (id_usuario, tabla_afectada, accion, id_registro, resumen, detalle, datos_antes, datos_despues, usuario_bd, fecha_evento, estado)
-  VALUES (NULL, 'usuarios', 'UPDATE', CAST(NEW.id_usuario AS CHAR), 'UPDATE en usuarios', 'Se actualizo un registro en usuarios', JSON_OBJECT('id_usuario', OLD.id_usuario, 'id_empleado', OLD.id_empleado, 'id_dependencia', OLD.id_dependencia, 'usuario', OLD.usuario, 'password', OLD.password, 'rol', OLD.rol, 'estado', OLD.estado), JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'id_dependencia', NEW.id_dependencia, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
+  VALUES (NULL, 'usuarios', 'UPDATE', CAST(NEW.id_usuario AS CHAR), 'UPDATE en usuarios', 'Se actualizo un registro en usuarios', JSON_OBJECT('id_usuario', OLD.id_usuario, 'id_empleado', OLD.id_empleado, 'usuario', OLD.usuario, 'password', OLD.password, 'rol', OLD.rol, 'estado', OLD.estado), JSON_OBJECT('id_usuario', NEW.id_usuario, 'id_empleado', NEW.id_empleado, 'usuario', NEW.usuario, 'password', NEW.password, 'rol', NEW.rol, 'estado', NEW.estado), CURRENT_USER(), NOW(), 1);
 END//
 DROP TRIGGER IF EXISTS tr_usuarios_bd_block_delete//
 CREATE TRIGGER tr_usuarios_bd_block_delete BEFORE DELETE ON usuarios FOR EACH ROW

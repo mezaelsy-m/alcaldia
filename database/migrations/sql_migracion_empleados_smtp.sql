@@ -24,12 +24,27 @@ SET @dependencia_default := (
 );
 SET @dependencia_default := IFNULL(@dependencia_default, 1);
 
-UPDATE empleados e
-INNER JOIN usuarios u
-    ON u.id_empleado = e.id_empleado
-SET e.id_dependencia = u.id_dependencia
-WHERE (e.id_dependencia IS NULL OR e.id_dependencia = 0)
-  AND u.id_dependencia IS NOT NULL;
+SET @usuarios_tiene_dependencia := (
+    SELECT COUNT(*)
+    FROM information_schema.columns
+    WHERE table_schema = DATABASE()
+      AND table_name = 'usuarios'
+      AND column_name = 'id_dependencia'
+);
+
+SET @sql := IF(
+    @usuarios_tiene_dependencia > 0,
+    'UPDATE empleados e
+     INNER JOIN usuarios u
+        ON u.id_empleado = e.id_empleado
+     SET e.id_dependencia = u.id_dependencia
+     WHERE (e.id_dependencia IS NULL OR e.id_dependencia = 0)
+       AND u.id_dependencia IS NOT NULL',
+    'SELECT 1'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 UPDATE empleados
 SET id_dependencia = @dependencia_default

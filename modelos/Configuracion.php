@@ -1543,15 +1543,6 @@ class Configuracion
                     throw new Exception("No se pudo actualizar el empleado.");
                 }
 
-                if (isset($empleadoActual["id_dependencia"]) && (int) $empleadoActual["id_dependencia"] !== (int) $payload["id_dependencia"]) {
-                    $sqlSyncUsuarios = "UPDATE usuarios
-                                        SET id_dependencia = '" . (int) $payload["id_dependencia"] . "'
-                                        WHERE id_empleado = '" . $idEmpleadoEditar . "'";
-                    if (!ejecutarConsulta($sqlSyncUsuarios)) {
-                        throw new Exception("Se actualizo el empleado, pero no se pudo sincronizar la dependencia de sus usuarios.");
-                    }
-                }
-
                 $conexion->commit();
                 return array(
                     "ok" => true,
@@ -1585,13 +1576,6 @@ class Configuracion
                                  WHERE id_empleado = '" . $idReactivado . "'";
                 if (!ejecutarConsulta($sqlReactivar)) {
                     throw new Exception("No se pudo reactivar el empleado existente.");
-                }
-
-                $sqlSyncUsuarios = "UPDATE usuarios
-                                    SET id_dependencia = '" . (int) $payload["id_dependencia"] . "'
-                                    WHERE id_empleado = '" . $idReactivado . "'";
-                if (!ejecutarConsulta($sqlSyncUsuarios)) {
-                    throw new Exception("Se reactivo el empleado, pero no se pudo sincronizar la dependencia de sus usuarios.");
                 }
 
                 $conexion->commit();
@@ -2717,7 +2701,6 @@ class Configuracion
 
                 $set = array(
                     "id_empleado = '" . (int) $payload["id_empleado"] . "'",
-                    "id_dependencia = '" . (int) $payload["id_dependencia"] . "'",
                     "usuario = '" . $this->esc($payload["usuario"]) . "'",
                     "rol = '" . $this->esc($payload["rol"]) . "'"
                 );
@@ -2779,7 +2762,6 @@ class Configuracion
 
                 $set = array(
                     "id_empleado = '" . (int) $payload["id_empleado"] . "'",
-                    "id_dependencia = '" . (int) $payload["id_dependencia"] . "'",
                     "usuario = '" . $this->esc($payload["usuario"]) . "'",
                     "rol = '" . $this->esc($payload["rol"]) . "'",
                     "estado = 1"
@@ -2809,14 +2791,12 @@ class Configuracion
 
             $sqlInsert = "INSERT INTO usuarios (
                                 id_empleado,
-                                id_dependencia,
                                 usuario,
                                 password,
                                 rol,
                                 estado
                            ) VALUES (
                                 '" . (int) $payload["id_empleado"] . "',
-                                '" . (int) $payload["id_dependencia"] . "',
                                 '" . $this->esc($payload["usuario"]) . "',
                                 '" . $this->esc($passwordHash) . "',
                                 '" . $this->esc($payload["rol"]) . "',
