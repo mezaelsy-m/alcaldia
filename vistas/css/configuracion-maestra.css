@@ -293,6 +293,26 @@
     border: 1px solid #cad8e8;
 }
 
+.config-master-card .dataTables_wrapper div.dataTables_paginate ul.pagination .page-link {
+    border-radius: 8px;
+    border-color: #d2deeb;
+    color: #1e4f73;
+    min-width: 34px;
+    text-align: center;
+}
+
+.config-master-card .dataTables_wrapper div.dataTables_paginate ul.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #0f74ac 0%, #0e5f8f 100%);
+    border-color: #0f74ac;
+    color: #ffffff;
+}
+
+.config-master-card .dataTables_wrapper div.dataTables_paginate ul.pagination .page-item.disabled .page-link {
+    color: #8aa0b5;
+    background: #f5f8fc;
+    border-color: #dbe5ef;
+}
+
 .config-master-card .form-control,
 .config-master-card .input-group-text,
 .config-master-modal .form-control {
@@ -620,5 +640,30 @@
         overflow-x: auto;
         overflow-y: hidden;
         padding-bottom: 4px;
+    }
+
+    .config-master-card .dataTables_wrapper div.dataTables_info {
+        white-space: normal;
+        text-align: center;
+        padding-top: 0.45rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .config-master-card .dataTables_wrapper div.dataTables_paginate {
+        white-space: normal;
+        margin-top: 0.35rem;
+    }
+
+    .config-master-card .dataTables_wrapper div.dataTables_paginate ul.pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        white-space: normal;
+        margin: 0;
+    }
+
+    .config-master-card .dataTables_wrapper div.dataTables_paginate ul.pagination .page-link {
+        padding: 0.34rem 0.54rem;
+        font-size: 0.92rem;
     }
 }
