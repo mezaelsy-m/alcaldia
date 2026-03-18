@@ -323,6 +323,30 @@ function configurarEventosConfiguracion() {
         .on("click.configuracion", function () {
             enviarPruebaSmtp();
         });
+
+    $("#usuarioSistemaEmpleado")
+        .off("change.configuracion")
+        .on("change.configuracion", function () {
+            actualizarDependenciaUsuarioSeleccionada();
+        });
+
+    $("#configuracionCatalogoModal")
+        .off("hidden.bs.modal.configuracion")
+        .on("hidden.bs.modal.configuracion", function () {
+            limpiarFormularioCatalogoConfiguracion();
+        });
+
+    $("#usuarioSistemaModal")
+        .off("hidden.bs.modal.configuracion")
+        .on("hidden.bs.modal.configuracion", function () {
+            limpiarFormularioUsuarioSistema();
+        });
+
+    $("#empleadoSistemaModal")
+        .off("hidden.bs.modal.configuracion")
+        .on("hidden.bs.modal.configuracion", function () {
+            limpiarFormularioEmpleadoSistema();
+        });
 }
 
 function destruirTablasConfiguracion() {
@@ -747,13 +771,16 @@ function renderizarAccionesFilaConfiguracion(catalogo, fila) {
 
     const idRegistro = fila[catalogo.pk];
     const botones = [];
+    const edicionBloqueada = catalogo.key === "dependencias" && !!fila.registro_protegido;
+    const tituloEditar = edicionBloqueada ? (fila.motivo_bloqueo || "Registro protegido") : "Editar";
+    const disabledEditar = edicionBloqueada ? " disabled" : "";
 
     botones.push('<div class="d-flex justify-content-end flex-nowrap config-master-actions">');
     botones.push(
         '<button type="button" class="btn btn-sm btn-outline-primary js-config-editar" data-catalogo="' +
         escapeAttrConfiguracion(catalogo.key) +
         '" data-id="' + escapeAttrConfiguracion(idRegistro) +
-        '" title="Editar"><i class="fas fa-pen"></i></button>'
+        '" title="' + escapeAttrConfiguracion(tituloEditar) + '"' + disabledEditar + '><i class="fas fa-pen"></i></button>'
     );
 
     if (parseInt(fila.estado, 10) === 1) {
@@ -1019,6 +1046,19 @@ function inicializarSelectsModalConfiguracion() {
     });
 }
 
+function limpiarFormularioCatalogoConfiguracion() {
+    const formulario = $("#formularioConfiguracionCatalogo");
+    if (!formulario.length) {
+        return;
+    }
+
+    formulario[0].reset();
+    $("#configuracionCatalogo").val("");
+    $("#configuracionRegistroId").val("");
+    $("#configuracionModalNotice").addClass("d-none").text("");
+    $("#configuracionModalFields").empty();
+}
+
 function guardarCatalogoConfiguracion() {
     const boton = $("#btnGuardarConfiguracionCatalogo");
     boton.prop("disabled", true);
@@ -1037,6 +1077,7 @@ function guardarCatalogoConfiguracion() {
             }
 
             const catalogoKey = $("#configuracionCatalogo").val();
+            limpiarFormularioCatalogoConfiguracion();
             $("#configuracionCatalogoModal").modal("hide");
             recargarCatalogoConfiguracion(catalogoKey, true);
             mostrarAlertaConfiguracion("success", response.msg || "Registro guardado correctamente.");
@@ -1378,7 +1419,7 @@ function abrirModalUsuarioSistema(idUsuario) {
         esUsuarioActual: false
     };
 
-    $("#formularioUsuarioSistema")[0].reset();
+    limpiarFormularioUsuarioSistema();
     $("#usuarioSistemaId").val(configuracionUsuarioModal.id || "");
     $("#usuarioSistemaNotice").addClass("d-none").text("");
     $("#usuarioSistemaModalLabel").text(configuracionUsuarioModal.id > 0 ? "Editar usuario" : "Nuevo usuario");
@@ -1399,13 +1440,11 @@ function poblarFormularioUsuarioSistema(item) {
     const meta = configuracionUsuariosMeta || {};
     const usuarioId = item && item.id_usuario ? parseInt(item.id_usuario, 10) : 0;
     const empleadoId = item && item.id_empleado ? parseInt(item.id_empleado, 10) : 0;
-    const dependenciaId = item && item.id_dependencia ? parseInt(item.id_dependencia, 10) : 0;
     const rol = item && item.rol ? String(item.rol) : "";
     const tieneAccesoTotal = !!(item && item.tiene_acceso_total);
     const permisosIds = item && Array.isArray(item.id_permisos) ? item.id_permisos.map(function (id) { return String(id); }) : [];
 
     $("#usuarioSistemaEmpleado").html(construirOpcionesEmpleadosUsuario(meta.empleados || [], usuarioId, empleadoId));
-    $("#usuarioSistemaDependencia").html(construirOpcionesSelectBasico(meta.dependencias || [], "id_dependencia", "nombre_dependencia", dependenciaId));
     $("#usuarioSistemaRol").html(construirOpcionesRolesUsuario(meta.roles || [], rol, tieneAccesoTotal));
     $("#usuarioSistemaPermisos").html(construirOpcionesPermisosUsuario(meta.permisos || [], permisosIds));
 
@@ -1420,6 +1459,8 @@ function poblarFormularioUsuarioSistema(item) {
     } else {
         $("#usuarioSistemaPermisos").val(null).trigger("change.select2");
     }
+
+    actualizarDependenciaUsuarioSeleccionada();
 }
 
 function construirOpcionesEmpleadosUsuario(items, usuarioId, empleadoId) {
@@ -1429,15 +1470,33 @@ function construirOpcionesEmpleadosUsuario(items, usuarioId, empleadoId) {
         const ocupadoPorOtro = parseInt(item.usuario_activo_id, 10) > 0 && parseInt(item.usuario_activo_id, 10) !== parseInt(usuarioId, 10);
         const selected = parseInt(item.id_empleado, 10) === parseInt(empleadoId, 10) ? ' selected="selected"' : "";
         const disabled = ocupadoPorOtro ? ' disabled="disabled"' : "";
+        const dataDependencia = ' data-dependencia="' + escapeAttrConfiguracion(item.nombre_dependencia || "Sin dependencia") + '"';
         const suffix = ocupadoPorOtro ? " | Ya asignado a " + item.usuario_activo : "";
         opciones.push(
-            '<option value="' + escapeAttrConfiguracion(item.id_empleado) + '"' + selected + disabled + '>' +
+            '<option value="' + escapeAttrConfiguracion(item.id_empleado) + '"' + selected + disabled + dataDependencia + '>' +
             escapeHtmlConfiguracion(item.label + suffix) +
             '</option>'
         );
     });
 
     return opciones.join("");
+}
+
+function actualizarDependenciaUsuarioSeleccionada() {
+    const select = $("#usuarioSistemaEmpleado");
+    const campo = $("#usuarioSistemaDependenciaVista");
+    if (!select.length || !campo.length) {
+        return;
+    }
+
+    const opcion = select.find("option:selected");
+    const dependencia = opcion.data("dependencia");
+    if (!select.val()) {
+        campo.val("");
+        return;
+    }
+
+    campo.val(dependencia ? String(dependencia) : "Sin dependencia");
 }
 
 function construirOpcionesSelectBasico(items, keyId, keyLabel, seleccionado) {
@@ -1499,7 +1558,6 @@ function inicializarSelectsUsuariosConfiguracion() {
 
     [
         { selector: "#usuarioSistemaEmpleado", placeholder: "Busque por cedula o nombre", multiple: false },
-        { selector: "#usuarioSistemaDependencia", placeholder: "Seleccione una dependencia", multiple: false },
         { selector: "#usuarioSistemaRol", placeholder: "Seleccione un rol", multiple: false },
         { selector: "#usuarioSistemaPermisos", placeholder: "Seleccione permisos operativos", multiple: true }
     ].forEach(function (config) {
@@ -1614,6 +1672,7 @@ function guardarUsuarioSistema() {
                 return;
             }
 
+            limpiarFormularioUsuarioSistema();
             $("#usuarioSistemaModal").modal("hide");
             cargarMetadatosUsuariosConfiguracion(false);
             mostrarAlertaConfiguracion("success", response.msg || "Usuario guardado correctamente.");
@@ -1956,7 +2015,7 @@ function abrirModalEmpleadoSistema(idEmpleado) {
         id: parseInt(idEmpleado, 10) || 0
     };
 
-    $("#formularioEmpleadoSistema")[0].reset();
+    limpiarFormularioEmpleadoSistema();
     $("#empleadoSistemaId").val(configuracionEmpleadoModal.id || "");
     $("#empleadoSistemaNotice").addClass("d-none").text("");
     $("#empleadoSistemaModalLabel").text(configuracionEmpleadoModal.id > 0 ? "Editar empleado" : "Nuevo empleado");
@@ -2064,6 +2123,7 @@ function guardarEmpleadoSistema() {
                 return;
             }
 
+            limpiarFormularioEmpleadoSistema();
             $("#empleadoSistemaModal").modal("hide");
             cargarMetadatosEmpleadosConfiguracion(false);
             if (configuracionUsuariosMeta) {
@@ -2079,6 +2139,29 @@ function guardarEmpleadoSistema() {
             boton.prop("disabled", false);
         }
     });
+}
+
+function limpiarFormularioUsuarioSistema() {
+    const formulario = $("#formularioUsuarioSistema");
+    if (!formulario.length) {
+        return;
+    }
+
+    formulario[0].reset();
+    $("#usuarioSistemaId").val("");
+    $("#usuarioSistemaNotice").addClass("d-none").text("");
+    $("#usuarioSistemaDependenciaVista").val("");
+}
+
+function limpiarFormularioEmpleadoSistema() {
+    const formulario = $("#formularioEmpleadoSistema");
+    if (!formulario.length) {
+        return;
+    }
+
+    formulario[0].reset();
+    $("#empleadoSistemaId").val("");
+    $("#empleadoSistemaNotice").addClass("d-none").text("");
 }
 
 function cambiarEstadoEmpleadoSistema(idEmpleado, operacion) {

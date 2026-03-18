@@ -818,6 +818,7 @@ function guardarSolicitudSeguridad() {
                     return;
                 }
 
+                limpiarFormularioSeguridad();
                 $("#seguridadEmergenciaModal").modal("hide");
                 recargarSeccionSeguridad();
 

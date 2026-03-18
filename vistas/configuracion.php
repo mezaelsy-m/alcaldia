@@ -490,10 +490,10 @@ if (!isset($_SESSION["nombre"])) {
                         </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="usuarioSistemaDependencia">Dependencia <span class="text-danger">*</span></label>
-                        <select id="usuarioSistemaDependencia" name="id_dependencia" class="form-control"
-                            required></select>
-                        <div class="modal-help">Area institucional a la que estara adscrito este usuario.</div>
+                        <label for="usuarioSistemaDependenciaVista">Dependencia</label>
+                        <input type="text" id="usuarioSistemaDependenciaVista" class="form-control"
+                            placeholder="Se asigna segun el empleado" readonly>
+                        <div class="modal-help">Se asigna automaticamente segun la dependencia del empleado.</div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="usuarioSistemaUsuario">Usuario <span class="text-danger">*</span></label>

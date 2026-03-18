@@ -664,13 +664,71 @@ class Configuracion
         return ejecutarConsultaSimpleFila($sql);
     }
 
+    private function normalizarTextoComparable($texto)
+    {
+        $texto = strtoupper(trim((string) $texto));
+        if ($texto === "") {
+            return "";
+        }
+
+        $texto = strtr($texto, array(
+            "Á" => "A",
+            "À" => "A",
+            "Ä" => "A",
+            "Â" => "A",
+            "É" => "E",
+            "È" => "E",
+            "Ë" => "E",
+            "Ê" => "E",
+            "Í" => "I",
+            "Ì" => "I",
+            "Ï" => "I",
+            "Î" => "I",
+            "Ó" => "O",
+            "Ò" => "O",
+            "Ö" => "O",
+            "Ô" => "O",
+            "Ú" => "U",
+            "Ù" => "U",
+            "Ü" => "U",
+            "Û" => "U",
+            "Ñ" => "N"
+        ));
+        $texto = preg_replace('/\s+/', ' ', $texto);
+        return trim((string) $texto);
+    }
+
+    private function esNombreDependenciaDireccionGeneral($nombreDependencia)
+    {
+        return $this->normalizarTextoComparable($nombreDependencia) === "DIRECCION GENERAL";
+    }
+
+    private function mensajeRegistroProtegido($config, $row = null)
+    {
+        if (isset($config["key"]) && (string) $config["key"] === "dependencias") {
+            return "La dependencia Direccion General es base del sistema y no puede modificarse ni desactivarse.";
+        }
+
+        return "Este registro es base del sistema y no puede desactivarse.";
+    }
+
+    private function registroProtegidoBloqueaEdicionCompleta($config, $row = null)
+    {
+        return isset($config["key"]) && (string) $config["key"] === "dependencias";
+    }
+
     private function esRegistroProtegido($config, $row)
     {
-        if (!$row || !isset($config["protected_codes"]) || !is_array($config["protected_codes"])) {
+        if (!$row || !is_array($config)) {
             return false;
         }
 
-        if (!isset($row["codigo_estado"])) {
+        if (isset($config["key"]) && (string) $config["key"] === "dependencias") {
+            $nombre = isset($row["nombre_dependencia"]) ? $row["nombre_dependencia"] : "";
+            return $this->esNombreDependenciaDireccionGeneral($nombre);
+        }
+
+        if (!isset($config["protected_codes"]) || !is_array($config["protected_codes"]) || !isset($row["codigo_estado"])) {
             return false;
         }
 
@@ -715,7 +773,7 @@ class Configuracion
         $row["registro_protegido"] = $this->esRegistroProtegido($config, $row);
         $row["puede_desactivar"] = $row["estado"] === 1 && !$row["registro_protegido"];
         $row["motivo_bloqueo"] = $row["registro_protegido"]
-            ? "Este registro es base del sistema y no puede desactivarse."
+            ? $this->mensajeRegistroProtegido($config, $row)
             : "";
 
         if ($this->catalogoEsSoloLectura($config)) {
@@ -864,7 +922,11 @@ class Configuracion
         if ($this->catalogoEsSoloLectura($config)) {
             $notice = "Este catalogo es fijo del sistema y solo permite consulta.";
         } elseif ($row["registro_protegido"]) {
+            if ($this->registroProtegidoBloqueaEdicionCompleta($config, $row)) {
+                $notice = $this->mensajeRegistroProtegido($config, $row);
+            } else {
                 $notice = "Este registro es base del sistema. Solo puedes editar nombre, descripcion, apariencia visual y orden.";
+            }
         }
 
         return array(
@@ -908,6 +970,10 @@ class Configuracion
 
                 $locks = $this->obtenerBloqueosRegistro($config, $actual);
                 if ($this->esRegistroProtegido($config, $actual)) {
+                    if ($this->registroProtegidoBloqueaEdicionCompleta($config, $actual)) {
+                        throw new Exception($this->mensajeRegistroProtegido($config, $actual));
+                    }
+
                     foreach ($locks as $lockedField => $flag) {
                         if (!array_key_exists($lockedField, $payload)) {
                             continue;
@@ -1042,7 +1108,7 @@ class Configuracion
             }
 
             if ($this->esRegistroProtegido($config, $row)) {
-                throw new Exception("Este registro es base del sistema y no puede desactivarse.");
+                throw new Exception($this->mensajeRegistroProtegido($config, $row));
             }
 
             $sql = "UPDATE `" . $config["table"] . "`
@@ -1477,6 +1543,15 @@ class Configuracion
                     throw new Exception("No se pudo actualizar el empleado.");
                 }
 
+                if (isset($empleadoActual["id_dependencia"]) && (int) $empleadoActual["id_dependencia"] !== (int) $payload["id_dependencia"]) {
+                    $sqlSyncUsuarios = "UPDATE usuarios
+                                        SET id_dependencia = '" . (int) $payload["id_dependencia"] . "'
+                                        WHERE id_empleado = '" . $idEmpleadoEditar . "'";
+                    if (!ejecutarConsulta($sqlSyncUsuarios)) {
+                        throw new Exception("Se actualizo el empleado, pero no se pudo sincronizar la dependencia de sus usuarios.");
+                    }
+                }
+
                 $conexion->commit();
                 return array(
                     "ok" => true,
@@ -1510,6 +1585,13 @@ class Configuracion
                                  WHERE id_empleado = '" . $idReactivado . "'";
                 if (!ejecutarConsulta($sqlReactivar)) {
                     throw new Exception("No se pudo reactivar el empleado existente.");
+                }
+
+                $sqlSyncUsuarios = "UPDATE usuarios
+                                    SET id_dependencia = '" . (int) $payload["id_dependencia"] . "'
+                                    WHERE id_empleado = '" . $idReactivado . "'";
+                if (!ejecutarConsulta($sqlSyncUsuarios)) {
+                    throw new Exception("Se reactivo el empleado, pero no se pudo sincronizar la dependencia de sus usuarios.");
                 }
 
                 $conexion->commit();
@@ -2022,7 +2104,7 @@ class Configuracion
     {
         $sql = "SELECT u.id_usuario,
                        u.id_empleado,
-                       u.id_dependencia,
+                       e.id_dependencia,
                        u.usuario,
                        u.password,
                        u.rol,
@@ -2032,7 +2114,7 @@ class Configuracion
                        d.nombre_dependencia
                 FROM usuarios u
                 INNER JOIN empleados e ON e.id_empleado = u.id_empleado
-                LEFT JOIN dependencias d ON d.id_dependencia = u.id_dependencia
+                LEFT JOIN dependencias d ON d.id_dependencia = e.id_dependencia
                 WHERE u.id_usuario = '" . (int) $idUsuario . "'
                 LIMIT 1";
 
@@ -2175,7 +2257,9 @@ class Configuracion
         $row["rol_texto"] = ucfirst(strtolower($row["rol"]));
         $row["empleado"] = trim((string) $row["empleado"]);
         $row["empleado_label"] = trim($row["cedula"] . " - " . $row["empleado"]);
-        $row["dependencia"] = (string) $row["nombre_dependencia"];
+        $row["dependencia"] = isset($row["nombre_dependencia"]) && trim((string) $row["nombre_dependencia"]) !== ""
+            ? (string) $row["nombre_dependencia"]
+            : "Sin dependencia";
         $row["permisos_regulares"] = $permisos["regulares"];
         $row["id_permisos"] = $permisos["regulares_ids"];
         $row["permisos_regulares_nombres"] = $permisosNombres;
@@ -2219,10 +2303,14 @@ class Configuracion
     {
         $sql = "SELECT e.id_empleado,
                        e.cedula,
+                       e.id_dependencia,
+                       d.nombre_dependencia,
                        TRIM(CONCAT(COALESCE(e.nombre, ''), ' ', COALESCE(e.apellido, ''))) AS empleado,
                        u.id_usuario AS usuario_activo_id,
                        u.usuario AS usuario_activo
                 FROM empleados e
+                LEFT JOIN dependencias d
+                    ON d.id_dependencia = e.id_dependencia
                 LEFT JOIN usuarios u
                     ON u.id_empleado = e.id_empleado
                    AND u.estado = 1
@@ -2236,6 +2324,8 @@ class Configuracion
                 $items[] = array(
                     "id_empleado" => (int) $row["id_empleado"],
                     "cedula" => (string) $row["cedula"],
+                    "id_dependencia" => isset($row["id_dependencia"]) ? (int) $row["id_dependencia"] : 0,
+                    "nombre_dependencia" => isset($row["nombre_dependencia"]) ? (string) $row["nombre_dependencia"] : "Sin dependencia",
                     "empleado" => (string) $row["empleado"],
                     "label" => trim((string) $row["cedula"] . " - " . (string) $row["empleado"]),
                     "usuario_activo_id" => isset($row["usuario_activo_id"]) ? (int) $row["usuario_activo_id"] : 0,
@@ -2283,7 +2373,6 @@ class Configuracion
 
         return array(
             "roles" => $this->obtenerRolesDisponiblesUsuarios($puedeGestionarAccesoTotal),
-            "dependencias" => $this->obtenerOpcionesDependenciasUsuarios(),
             "empleados" => $this->obtenerOpcionesEmpleadosUsuarios(),
             "permisos" => $this->obtenerOpcionesPermisosUsuarios(),
             "permiso_acceso_total" => array(
@@ -2306,7 +2395,7 @@ class Configuracion
 
         $sql = "SELECT u.id_usuario,
                        u.id_empleado,
-                       u.id_dependencia,
+                       e.id_dependencia,
                        u.usuario,
                        u.rol,
                        u.estado,
@@ -2315,7 +2404,7 @@ class Configuracion
                        d.nombre_dependencia
                 FROM usuarios u
                 INNER JOIN empleados e ON e.id_empleado = u.id_empleado
-                LEFT JOIN dependencias d ON d.id_dependencia = u.id_dependencia
+                LEFT JOIN dependencias d ON d.id_dependencia = e.id_dependencia
                 " . $where . "
                 ORDER BY u.usuario ASC";
 
@@ -2390,7 +2479,6 @@ class Configuracion
     {
         $sessionEsAdmin = $this->esUsuarioAdministrador($idUsuarioSesion);
         $idEmpleado = isset($data["id_empleado"]) ? (int) $data["id_empleado"] : 0;
-        $idDependencia = isset($data["id_dependencia"]) ? (int) $data["id_dependencia"] : 0;
         $usuario = trim((string) (isset($data["usuario"]) ? $data["usuario"] : ""));
         $rol = strtoupper(trim((string) (isset($data["rol"]) ? $data["rol"] : "")));
         $password = (string) (isset($data["password"]) ? $data["password"] : "");
@@ -2399,10 +2487,6 @@ class Configuracion
 
         if ($idEmpleado <= 0) {
             return array("ok" => false, "msg" => "Debe seleccionar el empleado asociado al usuario.");
-        }
-
-        if ($idDependencia <= 0) {
-            return array("ok" => false, "msg" => "Debe seleccionar una dependencia.");
         }
 
         if ($usuario === "") {
@@ -2447,24 +2531,55 @@ class Configuracion
         }
 
         $empleado = ejecutarConsultaSimpleFila(
-            "SELECT id_empleado
-             FROM empleados
-             WHERE id_empleado = '" . $idEmpleado . "'
+            "SELECT e.id_empleado,
+                    IFNULL(e.estado, 1) AS estado_empleado,
+                    e.id_dependencia,
+                    IFNULL(d.estado, 1) AS estado_dependencia,
+                    d.nombre_dependencia
+             FROM empleados e
+             LEFT JOIN dependencias d
+                ON d.id_dependencia = e.id_dependencia
+             WHERE e.id_empleado = '" . $idEmpleado . "'
              LIMIT 1"
         );
         if (!$empleado) {
             return array("ok" => false, "msg" => "El empleado seleccionado no existe.");
         }
 
-        $dependencia = ejecutarConsultaSimpleFila(
-            "SELECT id_dependencia
-             FROM dependencias
-             WHERE id_dependencia = '" . $idDependencia . "'
-               AND IFNULL(estado, 1) = 1
-             LIMIT 1"
-        );
-        if (!$dependencia) {
-            return array("ok" => false, "msg" => "La dependencia seleccionada no esta disponible.");
+        if ((int) $empleado["estado_empleado"] !== 1) {
+            return array("ok" => false, "msg" => "El empleado seleccionado se encuentra inactivo.");
+        }
+
+        $idDependencia = isset($empleado["id_dependencia"]) ? (int) $empleado["id_dependencia"] : 0;
+        if ($idDependencia <= 0) {
+            return array("ok" => false, "msg" => "El empleado seleccionado no tiene dependencia asignada.");
+        }
+
+        if ((int) $empleado["estado_dependencia"] !== 1) {
+            return array("ok" => false, "msg" => "La dependencia asociada al empleado no esta disponible.");
+        }
+
+        $usuarioSeraActivo = (int) $idUsuarioEditar > 0
+            ? ($usuarioActual && isset($usuarioActual["estado"]) && (int) $usuarioActual["estado"] === 1)
+            : true;
+
+        if ($usuarioSeraActivo && $this->esNombreDependenciaDireccionGeneral(isset($empleado["nombre_dependencia"]) ? $empleado["nombre_dependencia"] : "")) {
+            $usuarioDireccionGeneral = ejecutarConsultaSimpleFila(
+                "SELECT u.id_usuario,
+                        u.usuario
+                 FROM usuarios u
+                 INNER JOIN empleados e
+                    ON e.id_empleado = u.id_empleado
+                 WHERE IFNULL(u.estado, 1) = 1
+                   AND IFNULL(e.estado, 1) = 1
+                   AND e.id_dependencia = '" . $idDependencia . "'
+                   AND u.id_usuario <> '" . (int) $idUsuarioEditar . "'
+                 LIMIT 1"
+            );
+
+            if ($usuarioDireccionGeneral) {
+                return array("ok" => false, "msg" => "La dependencia Direccion General solo puede tener un usuario activo.");
+            }
         }
 
         $permisosFiltrados = array();
@@ -2754,6 +2869,23 @@ class Configuracion
 
             if (!$activar && (int) $row["estado"] === 0) {
                 throw new Exception("El usuario ya se encuentra inactivo.");
+            }
+
+            if ($activar && $this->esNombreDependenciaDireccionGeneral(isset($row["nombre_dependencia"]) ? $row["nombre_dependencia"] : "")) {
+                $usuarioDireccionGeneral = ejecutarConsultaSimpleFila(
+                    "SELECT u.id_usuario
+                     FROM usuarios u
+                     INNER JOIN empleados e
+                        ON e.id_empleado = u.id_empleado
+                     WHERE IFNULL(u.estado, 1) = 1
+                       AND IFNULL(e.estado, 1) = 1
+                       AND e.id_dependencia = '" . (int) $row["id_dependencia"] . "'
+                       AND u.id_usuario <> '" . $idUsuarioObjetivo . "'
+                     LIMIT 1"
+                );
+                if ($usuarioDireccionGeneral) {
+                    throw new Exception("La dependencia Direccion General solo puede tener un usuario activo.");
+                }
             }
 
             $sql = "UPDATE usuarios

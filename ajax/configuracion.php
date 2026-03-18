@@ -231,7 +231,6 @@ switch ($op) {
 
         $payloadUsuario = array(
             "id_empleado" => isset($_POST["id_empleado"]) ? (int) $_POST["id_empleado"] : 0,
-            "id_dependencia" => isset($_POST["id_dependencia"]) ? (int) $_POST["id_dependencia"] : 0,
             "usuario" => isset($_POST["usuario"]) ? trim((string) $_POST["usuario"]) : "",
             "rol" => isset($_POST["rol"]) ? trim((string) $_POST["rol"]) : "",
             "password" => isset($_POST["password"]) ? (string) $_POST["password"] : "",
