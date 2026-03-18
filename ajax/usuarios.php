@@ -41,6 +41,7 @@ switch ($op) {
         $_SESSION["nombre"] = (string) $sesion["usuario"];
         $_SESSION["usuario"] = (string) $sesion["usuario"];
         $_SESSION["rol"] = (string) $sesion["rol"];
+        $_SESSION["nombre_empleado"] = isset($sesion["nombre_empleado"]) ? (string) $sesion["nombre_empleado"] : (string) $sesion["usuario"];
         $_SESSION["idBitacora"] = (int) $sesion["id_usuario"];
         $_SESSION["password_temporal"] = isset($sesion["password_temporal"]) ? (int) $sesion["password_temporal"] : 0;
 
@@ -55,6 +56,7 @@ switch ($op) {
             "id_usuario" => (int) $sesion["id_usuario"],
             "usuario" => (string) $sesion["usuario"],
             "rol" => (string) $sesion["rol"],
+            "nombre_empleado" => isset($sesion["nombre_empleado"]) ? (string) $sesion["nombre_empleado"] : (string) $sesion["usuario"],
             "password_temporal" => isset($sesion["password_temporal"]) ? (int) $sesion["password_temporal"] : 0
         ));
         break;
@@ -73,6 +75,7 @@ switch ($op) {
         $_SESSION["nombre"] = (string) $sesion["usuario"];
         $_SESSION["usuario"] = (string) $sesion["usuario"];
         $_SESSION["rol"] = (string) $sesion["rol"];
+        $_SESSION["nombre_empleado"] = isset($sesion["nombre_empleado"]) ? (string) $sesion["nombre_empleado"] : (string) $sesion["usuario"];
         $_SESSION["idBitacora"] = (int) $sesion["id_usuario"];
         $_SESSION["password_temporal"] = isset($sesion["password_temporal"]) ? (int) $sesion["password_temporal"] : 0;
 
@@ -87,6 +90,7 @@ switch ($op) {
             "id_usuario" => (int) $sesion["id_usuario"],
             "usuario" => (string) $sesion["usuario"],
             "rol" => (string) $sesion["rol"],
+            "nombre_empleado" => isset($sesion["nombre_empleado"]) ? (string) $sesion["nombre_empleado"] : (string) $sesion["usuario"],
             "password_temporal" => isset($sesion["password_temporal"]) ? (int) $sesion["password_temporal"] : 0
         ));
         break;

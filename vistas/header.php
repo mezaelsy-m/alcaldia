@@ -5,6 +5,36 @@ if (strlen(session_id()) < 1) {
 
 $currentPage = basename($_SERVER["PHP_SELF"] ?? "");
 $userName = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "Usuario";
+$employeeName = isset($_SESSION["nombre_empleado"]) ? trim((string) $_SESSION["nombre_empleado"]) : "";
+
+if ($employeeName === "" && isset($_SESSION["idusuario"])) {
+    if (!function_exists("ejecutarConsultaSimpleFila")) {
+        require_once __DIR__ . "/../config/Conexion.php";
+    }
+
+    $idUsuarioSesion = (int) $_SESSION["idusuario"];
+    if ($idUsuarioSesion > 0 && function_exists("ejecutarConsultaSimpleFila")) {
+        $filaEmpleadoSesion = ejecutarConsultaSimpleFila(
+            "SELECT TRIM(CONCAT(COALESCE(e.nombre, ''), ' ', COALESCE(e.apellido, ''))) AS nombre_empleado
+             FROM usuarios u
+             INNER JOIN empleados e ON e.id_empleado = u.id_empleado
+             WHERE u.id_usuario = '" . $idUsuarioSesion . "'
+             LIMIT 1"
+        );
+
+        if (is_array($filaEmpleadoSesion) && isset($filaEmpleadoSesion["nombre_empleado"])) {
+            $nombreSesion = trim((string) $filaEmpleadoSesion["nombre_empleado"]);
+            if ($nombreSesion !== "") {
+                $employeeName = $nombreSesion;
+                $_SESSION["nombre_empleado"] = $nombreSesion;
+            }
+        }
+    }
+}
+
+if ($employeeName === "") {
+    $employeeName = $userName;
+}
 $userRole = isset($_SESSION["rol"]) ? $_SESSION["rol"] : "Operador";
 
 $pageTitles = array(
@@ -89,7 +119,7 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
                 <li class="nav-item d-none d-sm-inline-flex">
                     <span class="nav-link header-user-chip">
                         <i class="fas fa-user-circle"></i>
-                        <span><?php echo htmlspecialchars($userName, ENT_QUOTES, "UTF-8"); ?></span>
+                        <span><?php echo htmlspecialchars($employeeName, ENT_QUOTES, "UTF-8"); ?></span>
                     </span>
                 </li>
                 <li class="nav-item">
@@ -167,7 +197,8 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
             <div class="sidebar-bottom-slot">
                 <a href="<?php echo htmlspecialchars($bottomMenuItem["href"], ENT_QUOTES, "UTF-8"); ?>"
                     class="nav-link sidebar-bottom-link<?php echo $bottomActive ? " active" : ""; ?>">
-                    <i class="nav-icon <?php echo htmlspecialchars($bottomMenuItem["icon"], ENT_QUOTES, "UTF-8"); ?>"></i>
+                    <i
+                        class="nav-icon <?php echo htmlspecialchars($bottomMenuItem["icon"], ENT_QUOTES, "UTF-8"); ?>"></i>
                     <p><?php echo htmlspecialchars($bottomMenuItem["label"], ENT_QUOTES, "UTF-8"); ?></p>
                 </a>
             </div>
@@ -176,8 +207,8 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
 
         <div class="content-wrapper">
             <div class="content-header header-context">
-                <div class="container-fluid">
-                    <div class="row mb-2 align-items-center">
+                <div class="container-fluid header-context-shell">
+                    <div class="row mb-2 align-items-center header-context-panel">
                         <div class="col-sm-6">
                             <h1 class="m-0"><?php echo htmlspecialchars($currentTitle, ENT_QUOTES, "UTF-8"); ?></h1>
                             <small>Gestion operativa municipal</small>
@@ -192,4 +223,3 @@ $bottomMenuItem = array("href" => "configuracion.php", "icon" => "fas fa-sliders
                     </div>
                 </div>
             </div>
-

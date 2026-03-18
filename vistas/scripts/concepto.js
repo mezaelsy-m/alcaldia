@@ -1,96 +1,100 @@
-function init() {
-    cargarEstadisticas();
-    setInterval(cargarEstadisticas, 30000);
+const REFRESH_CONCEPTO_MS = 45000;
+
+const ESTADISTICAS_BASE = {
+    total_beneficiarios: 0,
+    total_ayudas: 0,
+    total_servicios: 0,
+    total_seguridad: 0,
+    total_atendidos: 0,
+    total_pendientes: 0,
+    total_registros_mes: 0,
+    total_traslados: 0,
+    unidades_disponibles: 0,
+    porcentaje_atencion: 0,
+    total_usuarios_activos: 0
+};
+
+function numeroSeguro(valor) {
+    const numero = Number(valor);
+    return Number.isFinite(numero) ? numero : 0;
 }
 
-function cargarEstadisticas() {
+function formatearNumero(valor, suffix) {
+    const numero = numeroSeguro(valor);
+    const esPorcentaje = String(suffix || "") === "%";
+    const opciones = esPorcentaje
+        ? { minimumFractionDigits: 1, maximumFractionDigits: 1 }
+        : { maximumFractionDigits: 0 };
+
+    return numero.toLocaleString("es-VE", opciones) + (suffix || "");
+}
+
+function renderizarEstadisticas(data) {
+    const payload = Object.assign({}, ESTADISTICAS_BASE, data || {});
+
+    $("[data-stat]").each(function () {
+        const $el = $(this);
+        const key = String($el.data("stat") || "");
+        const suffix = String($el.data("suffix") || "");
+        const value = numeroSeguro(payload[key]);
+        $el.text(formatearNumero(value, suffix));
+    });
+}
+
+function actualizarBadgeActualizacion(data, error) {
+    const $badge = $("#concepto-actualizado");
+    if ($badge.length === 0) {
+        return;
+    }
+
+    if (error) {
+        $badge.removeClass("badge-light").addClass("badge-warning");
+        $badge.text("Sin conexion con estadisticas");
+        return;
+    }
+
+    const fechaLocal = new Date();
+    const texto = "Actualizado: " + fechaLocal.toLocaleTimeString("es-VE", { hour: "2-digit", minute: "2-digit" });
+
+    $badge.removeClass("badge-warning").addClass("badge-light");
+    $badge.text(texto);
+}
+
+function mostrarEstadoError(visible) {
+    const $error = $("#concepto-error");
+    if ($error.length === 0) {
+        return;
+    }
+
+    if (visible) {
+        $error.removeClass("d-none");
+        return;
+    }
+
+    $error.addClass("d-none");
+}
+
+function cargarEstadisticasConcepto() {
     $.ajax({
         url: "../ajax/concepto.php?op=estadisticas",
         type: "GET",
         dataType: "json",
-        success: function (data) {
-            $("#total-beneficiarios").text(data.total_beneficiarios || 0);
-            $("#total-ayudas").text(data.total_ayudas || 0);
-            $("#total-servicios").text(data.total_servicios || 0);
-            $("#total-seguridad").text(data.total_seguridad || 0);
-
-            $("#stat-beneficiarios").text(data.total_beneficiarios || 0);
-            $("#stat-ayudas").text(data.total_ayudas || 0);
-            $("#stat-servicios").text(data.total_servicios || 0);
-            $("#stat-emergencias").text(data.total_seguridad || 0);
-
-            animarNumeros();
-        },
-        error: function () {
-            mostrarValoresPredeterminados();
-        }
-    });
+        cache: false
+    })
+        .done(function (data) {
+            const ok = data && data.ok !== false;
+            renderizarEstadisticas(ok ? data : ESTADISTICAS_BASE);
+            mostrarEstadoError(!ok);
+            actualizarBadgeActualizacion(data, !ok);
+        })
+        .fail(function () {
+            renderizarEstadisticas(ESTADISTICAS_BASE);
+            mostrarEstadoError(true);
+            actualizarBadgeActualizacion(null, true);
+        });
 }
 
-function animarNumeros() {
-    $(".small-box h3, .info-box-number").each(function () {
-        const $this = $(this);
-        const countTo = parseInt($this.text(), 10) || 0;
-
-        if (countTo > 0) {
-            $this.text(0);
-            $this.css("opacity", "0");
-            $this.animate({ opacity: 1 }, 500);
-
-            $({ countNum: 0 }).animate(
-                { countNum: countTo },
-                {
-                    duration: 1500,
-                    easing: "swing",
-                    step: function () {
-                        $this.text(Math.ceil(this.countNum));
-                    },
-                    complete: function () {
-                        $this.text(countTo);
-                    }
-                }
-            );
-        }
-    });
-}
-
-function mostrarValoresPredeterminados() {
-    const valores = {
-        "total-beneficiarios": 0,
-        "total-ayudas": 0,
-        "total-servicios": 0,
-        "total-seguridad": 0,
-        "stat-beneficiarios": 0,
-        "stat-ayudas": 0,
-        "stat-servicios": 0,
-        "stat-emergencias": 0
-    };
-
-    Object.keys(valores).forEach(function (id) {
-        $("#" + id).text(valores[id]);
-    });
-}
-
-$(document).on("mouseenter", ".small-box", function () {
-    $(this).addClass("shadow-lg");
-    $(this).css("transform", "translateY(-2px)");
-    $(this).css("transition", "all 0.3s ease");
+$(function () {
+    cargarEstadisticasConcepto();
+    setInterval(cargarEstadisticasConcepto, REFRESH_CONCEPTO_MS);
 });
-
-$(document).on("mouseleave", ".small-box", function () {
-    $(this).removeClass("shadow-lg");
-    $(this).css("transform", "translateY(0)");
-});
-
-$(document).on("mouseenter", ".info-box", function () {
-    $(this).addClass("shadow");
-    $(this).css("transform", "scale(1.02)");
-    $(this).css("transition", "all 0.3s ease");
-});
-
-$(document).on("mouseleave", ".info-box", function () {
-    $(this).removeClass("shadow");
-    $(this).css("transform", "scale(1)");
-});
-
-init();

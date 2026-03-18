@@ -34,6 +34,11 @@
     font-weight: 500;
 }
 
+.small-box small {
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 500;
+}
+
 .small-box .icon {
     position: absolute;
     top: 50%;
@@ -224,6 +229,24 @@
 .small-box-footer:hover {
     background: rgba(0, 0, 0, 0.2);
     text-decoration: none;
+}
+
+.concept-shortcut-btn {
+    min-height: 86px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.concept-shortcut-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.09);
+}
+
+.concept-update-badge {
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.6rem;
 }
 
 /* Loading animation */

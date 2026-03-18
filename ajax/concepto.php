@@ -7,63 +7,174 @@ require_once "../modelos/Serviciospublicos.php";
 require_once "../modelos/Serviciosemergencia.php";
 require_once "../config/Conexion.php";
 
+function jsonResponseConcepto($data, $status = 200)
+{
+    if (function_exists("http_response_code")) {
+        http_response_code((int) $status);
+    }
+
+    header("Content-Type: application/json; charset=utf-8");
+    echo json_encode($data);
+    exit;
+}
+
+function intValueConcepto($row, $key)
+{
+    if (!is_array($row) || !isset($row[$key])) {
+        return 0;
+    }
+
+    return (int) $row[$key];
+}
+
+function safeCountConcepto($sql, $field = "total")
+{
+    $row = ejecutarConsultaSimpleFila($sql);
+    if (!is_array($row) || !isset($row[$field])) {
+        return 0;
+    }
+
+    return (int) $row[$field];
+}
+
+function totalMesConcepto($table, $dateField)
+{
+    if (!preg_match('/^[a-zA-Z0-9_]+$/', (string) $table) || !preg_match('/^[a-zA-Z0-9_]+$/', (string) $dateField)) {
+        return 0;
+    }
+
+    $sql = "SELECT COUNT(*) AS total
+            FROM `$table`
+            WHERE IFNULL(estado, 1) = 1
+              AND `$dateField` IS NOT NULL
+              AND YEAR(`$dateField`) = YEAR(CURDATE())
+              AND MONTH(`$dateField`) = MONTH(CURDATE())";
+
+    return safeCountConcepto($sql);
+}
+
+if (!isset($_SESSION["nombre"])) {
+    jsonResponseConcepto(
+        array(
+            "ok" => false,
+            "msg" => "Sesion no valida."
+        ),
+        401
+    );
+}
+
+if (!isset($_SESSION["Concepto"]) || (int) $_SESSION["Concepto"] !== 1) {
+    jsonResponseConcepto(
+        array(
+            "ok" => false,
+            "msg" => "No autorizado para consultar esta informacion."
+        ),
+        403
+    );
+}
+
 $beneficiario = new Beneficiario();
 $ayudasocial = new Ayudasocial();
-$serviciospubli = new Servicios();
-$serviciosemer = new Seguridad_emergencia();
+$serviciosPublicos = new Serviciospublicos();
+$seguridadEmergencia = new Seguridad_emergencia();
 
-switch ($_GET["op"]) {
+$op = isset($_GET["op"]) ? (string) $_GET["op"] : "";
+
+switch ($op) {
     case "estadisticas":
         $estadisticas = array(
+            "ok" => true,
             "total_beneficiarios" => 0,
             "total_ayudas" => 0,
             "total_servicios" => 0,
             "total_seguridad" => 0,
+            "ayudas_atendidas" => 0,
+            "ayudas_pendientes" => 0,
+            "servicios_atendidos" => 0,
+            "servicios_pendientes" => 0,
+            "seguridad_pendientes" => 0,
+            "seguridad_finalizadas" => 0,
+            "total_atendidos" => 0,
+            "total_pendientes" => 0,
             "total_traslados" => 0,
-            "total_usuarios" => 0
+            "total_usuarios_activos" => 0,
+            "unidades_disponibles" => 0,
+            "beneficiarios_mes" => 0,
+            "ayudas_mes" => 0,
+            "servicios_mes" => 0,
+            "seguridad_mes" => 0,
+            "total_registros_mes" => 0,
+            "porcentaje_atencion" => 0,
+            "actualizado_en" => date("Y-m-d H:i:s")
         );
 
         try {
-            $rspta_beneficiarios = $beneficiario->listar();
-            while ($rspta_beneficiarios && $rspta_beneficiarios->fetch_object()) {
-                $estadisticas["total_beneficiarios"]++;
+            $resumenBeneficiarios = $beneficiario->resumen();
+            $resumenAyudas = $ayudasocial->resumen();
+            $resumenServicios = $serviciosPublicos->resumen();
+            $resumenSeguridad = $seguridadEmergencia->resumen();
+
+            $estadisticas["total_beneficiarios"] = intValueConcepto($resumenBeneficiarios, "activos");
+            $estadisticas["total_ayudas"] = intValueConcepto($resumenAyudas, "total");
+            $estadisticas["total_servicios"] = intValueConcepto($resumenServicios, "total");
+            $estadisticas["total_seguridad"] = intValueConcepto($resumenSeguridad, "total");
+
+            $estadisticas["ayudas_atendidas"] = intValueConcepto($resumenAyudas, "atendidas");
+            $estadisticas["ayudas_pendientes"] = intValueConcepto($resumenAyudas, "no_atendidas");
+            $estadisticas["servicios_atendidos"] = intValueConcepto($resumenServicios, "atendidas");
+            $estadisticas["servicios_pendientes"] = intValueConcepto($resumenServicios, "pendientes");
+
+            $seguridadPendientesUnidad = intValueConcepto($resumenSeguridad, "pendientes_unidad");
+            $seguridadRegistradas = intValueConcepto($resumenSeguridad, "registrados");
+            $estadisticas["seguridad_pendientes"] = $seguridadPendientesUnidad + $seguridadRegistradas;
+            $estadisticas["seguridad_finalizadas"] = intValueConcepto($resumenSeguridad, "finalizadas");
+            $estadisticas["unidades_disponibles"] = intValueConcepto($resumenSeguridad, "unidades_disponibles");
+
+            $estadisticas["total_atendidos"] = $estadisticas["ayudas_atendidas"]
+                + $estadisticas["servicios_atendidos"]
+                + $estadisticas["seguridad_finalizadas"];
+
+            $estadisticas["total_pendientes"] = $estadisticas["ayudas_pendientes"]
+                + $estadisticas["servicios_pendientes"]
+                + $estadisticas["seguridad_pendientes"];
+
+            $totalCasosGestion = $estadisticas["total_ayudas"]
+                + $estadisticas["total_servicios"]
+                + $estadisticas["total_seguridad"];
+
+            if ($totalCasosGestion > 0) {
+                $estadisticas["porcentaje_atencion"] = round(($estadisticas["total_atendidos"] * 100) / $totalCasosGestion, 1);
             }
 
-            $rspta_ayudas = $ayudasocial->listar();
-            while ($rspta_ayudas && $rspta_ayudas->fetch_object()) {
-                $estadisticas["total_ayudas"]++;
-            }
+            $estadisticas["total_traslados"] = safeCountConcepto("SELECT COUNT(*) AS total FROM reportes_traslado");
+            $estadisticas["total_usuarios_activos"] = safeCountConcepto("SELECT COUNT(*) AS total FROM usuarios WHERE IFNULL(estado, 1) = 1");
 
-            $rspta_servicios = $serviciospubli->listar();
-            while ($rspta_servicios && $rspta_servicios->fetch_object()) {
-                $estadisticas["total_servicios"]++;
-            }
+            $estadisticas["beneficiarios_mes"] = totalMesConcepto("beneficiarios", "fecha_registro");
+            $estadisticas["ayudas_mes"] = totalMesConcepto("ayuda_social", "fecha_ayuda");
+            $estadisticas["servicios_mes"] = totalMesConcepto("servicios_publicos", "fecha_servicio");
+            $estadisticas["seguridad_mes"] = totalMesConcepto("seguridad", "fecha_seguridad");
 
-            $rspta_seguridad = $serviciosemer->listar();
-            while ($rspta_seguridad && $rspta_seguridad->fetch_object()) {
-                $estadisticas["total_seguridad"]++;
-            }
-
-            $rspta_traslados = ejecutarConsultaSimpleFila("SELECT COUNT(*) AS total FROM reportes_traslado");
-            if ($rspta_traslados && isset($rspta_traslados["total"])) {
-                $estadisticas["total_traslados"] = (int)$rspta_traslados["total"];
-            }
-
-            $rspta_usuarios = ejecutarConsultaSimpleFila("SELECT COUNT(*) AS total FROM usuarios WHERE estado='1'");
-            if ($rspta_usuarios && isset($rspta_usuarios["total"])) {
-                $estadisticas["total_usuarios"] = (int)$rspta_usuarios["total"];
-            }
+            $estadisticas["total_registros_mes"] = $estadisticas["beneficiarios_mes"]
+                + $estadisticas["ayudas_mes"]
+                + $estadisticas["servicios_mes"]
+                + $estadisticas["seguridad_mes"];
         } catch (Exception $e) {
+            $estadisticas["ok"] = false;
+            $estadisticas["msg"] = "No se pudo cargar el resumen general.";
             $estadisticas["error"] = $e->getMessage();
         }
 
-        header("Content-Type: application/json");
-        echo json_encode($estadisticas);
+        jsonResponseConcepto($estadisticas);
         break;
 
     default:
-        header("Content-Type: application/json");
-        echo json_encode(array("error" => "Operacion no soportada"));
+        jsonResponseConcepto(
+            array(
+                "ok" => false,
+                "msg" => "Operacion no soportada."
+            ),
+            400
+        );
         break;
 }
 ?>

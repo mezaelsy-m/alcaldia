@@ -503,10 +503,16 @@ class Usuarios
 
     private function construirUsuarioSesion($fila)
     {
+        $nombreEmpleado = trim((string) (isset($fila["nombre_empleado"]) ? $fila["nombre_empleado"] : ""));
+        if ($nombreEmpleado === "") {
+            $nombreEmpleado = (string) $fila["usuario"];
+        }
+
         return array(
             "id_usuario" => (int) $fila["id_usuario"],
             "usuario" => (string) $fila["usuario"],
             "rol" => (string) $fila["rol"],
+            "nombre_empleado" => $nombreEmpleado,
             "password_temporal" => isset($fila["password_temporal"]) ? (int) $fila["password_temporal"] : 0
         );
     }
