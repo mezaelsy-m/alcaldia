@@ -1,0 +1,14 @@
+Explica: registra un evento de bitacora usando el procedimiento centralizado del sistema.
+SQL:
+CALL sp_bitacora_registrar_evento(
+    ?, -- id_usuario
+    ?, -- tabla_afectada
+    ?, -- accion
+    ?, -- id_registro
+    ?, -- resumen
+    ?, -- detalle
+    ?, -- datos_antes
+    ?, -- datos_despues
+    ?, -- ipaddr
+    ?  -- estado
+);

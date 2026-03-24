@@ -28,7 +28,14 @@ if ($tiene_permiso)
                               </div>
                               <div class="card-header">
                                     <div class="row">
-                                          <div class="form-group col-md-12 col-sm-12 col-xs-1">
+                                          <div class="form-group col-md-4 col-sm-12 col-xs-12">
+                                                <label for="filtroBitacoraScope" class="mb-1">Tipo de bitacora</label>
+                                                <select id="filtroBitacoraScope" class="form-control">
+                                                      <option value="sistema">Sistema completo</option>
+                                                      <option value="autenticacion">Solo autenticacion</option>
+                                                </select>
+                                          </div>
+                                          <div class="form-group col-md-8 col-sm-12 col-xs-12 d-flex align-items-end">
 						      <button class="btn btn-success" id="btnreporte" onclick="generarReportePDF()"><i class="fa fa-file-pdf"></i> Reporte PDF</button>
                                      </div>
 				            </div>

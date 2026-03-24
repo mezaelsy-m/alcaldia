@@ -404,7 +404,7 @@ if (!isset($_SESSION["nombre"])) {
                     </div>
                     <div class="card-body table-responsive p-3">
                         <div class="row mb-3 align-items-end">
-                            <div class="col-lg-9">
+                            <div class="col-lg-6">
                                 <label for="buscadorBitacoraSistema" class="sr-only">Buscar registros de bitacora</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -413,6 +413,13 @@ if (!isset($_SESSION["nombre"])) {
                                     <input type="search" class="form-control" id="buscadorBitacoraSistema"
                                         placeholder="Buscar por usuario, resumen o detalle" autocomplete="off">
                                 </div>
+                            </div>
+                            <div class="col-lg-3 mt-2 mt-lg-0">
+                                <label for="filtroBitacoraSistemaScope" class="sr-only">Tipo de bitacora</label>
+                                <select id="filtroBitacoraSistemaScope" class="form-control">
+                                    <option value="sistema">Sistema completo</option>
+                                    <option value="autenticacion">Solo autenticacion</option>
+                                </select>
                             </div>
                             <div class="col-lg-3 text-lg-right mt-2 mt-lg-0" id="bitacoraSistemaLength"></div>
                         </div>

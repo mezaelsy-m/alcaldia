@@ -1,5 +1,8 @@
 <?php
 require "global.php";
+require_once "SystemLogger.php";
+
+bootstrapSystemLogger();
 
 if (!isset($conexion) || !($conexion instanceof mysqli)) {
     $dbHost = DB_HOST;
@@ -13,6 +16,12 @@ if (!isset($conexion) || !($conexion instanceof mysqli)) {
     mysqli_query($conexion, 'SET NAMES "' . DB_ENCODE . '"');
 
     if ($conexion->connect_errno) {
+        registrarFallaSistema("DB_CONNECT", "Fallo conexion a la base de datos.", array(
+            "host" => $dbHost,
+            "database" => DB_NAME,
+            "error" => $conexion->connect_error,
+            "errno" => $conexion->connect_errno
+        ));
         printf("Fallo conexion a la base de datos: %s\n", $conexion->connect_error);
         exit();
     }
@@ -23,6 +32,13 @@ if (!function_exists("ejecutarConsulta")) {
     {
         global $conexion;
         $query = $conexion->query($sql);
+        if ($query === false) {
+            registrarFallaSistema("DB_QUERY", "Error al ejecutar consulta SQL.", array(
+                "error" => $conexion->error,
+                "errno" => $conexion->errno,
+                "sql" => resumirConsultaSistema($sql)
+            ));
+        }
         return $query;
     }
 
@@ -30,15 +46,128 @@ if (!function_exists("ejecutarConsulta")) {
     {
         global $conexion;
         $query = $conexion->query($sql);
+        if ($query === false) {
+            registrarFallaSistema("DB_QUERY", "Error al ejecutar consulta simple SQL.", array(
+                "error" => $conexion->error,
+                "errno" => $conexion->errno,
+                "sql" => resumirConsultaSistema($sql)
+            ));
+            return null;
+        }
         $row = $query ? $query->fetch_assoc() : null;
+        if ($query instanceof mysqli_result) {
+            $query->free();
+        }
         return $row;
     }
 
     function ejecutarConsulta_retornarID($sql)
     {
         global $conexion;
-        $conexion->query($sql);
+        $resultado = $conexion->query($sql);
+        if ($resultado === false) {
+            registrarFallaSistema("DB_QUERY", "Error al ejecutar consulta con retorno de ID.", array(
+                "error" => $conexion->error,
+                "errno" => $conexion->errno,
+                "sql" => resumirConsultaSistema($sql)
+            ));
+            return 0;
+        }
         return $conexion->insert_id;
+    }
+
+    function limpiarResultadosPendientesConexion()
+    {
+        global $conexion;
+        if (!($conexion instanceof mysqli)) {
+            return;
+        }
+
+        while ($conexion->more_results()) {
+            if (!$conexion->next_result()) {
+                break;
+            }
+
+            $extra = $conexion->store_result();
+            if ($extra instanceof mysqli_result) {
+                $extra->free();
+            }
+        }
+    }
+
+    function ejecutarProcedimientoNoResultado($sql)
+    {
+        global $conexion;
+        $resultado = $conexion->query($sql);
+
+        if ($resultado === false) {
+            registrarFallaSistema("DB_PROC", "Error al ejecutar procedimiento almacenado.", array(
+                "error" => $conexion->error,
+                "errno" => $conexion->errno,
+                "sql" => resumirConsultaSistema($sql)
+            ));
+            return false;
+        }
+
+        if ($resultado instanceof mysqli_result) {
+            $resultado->free();
+        }
+
+        limpiarResultadosPendientesConexion();
+
+        return true;
+    }
+
+    function ejecutarProcedimientoSimpleFila($sql)
+    {
+        global $conexion;
+        $resultado = $conexion->query($sql);
+
+        if ($resultado === false) {
+            registrarFallaSistema("DB_PROC", "Error al ejecutar procedimiento almacenado con retorno simple.", array(
+                "error" => $conexion->error,
+                "errno" => $conexion->errno,
+                "sql" => resumirConsultaSistema($sql)
+            ));
+            return null;
+        }
+
+        $fila = null;
+        if ($resultado instanceof mysqli_result) {
+            $fila = $resultado->fetch_assoc();
+            $resultado->free();
+        }
+
+        limpiarResultadosPendientesConexion();
+
+        return $fila;
+    }
+
+    function ejecutarProcedimientoLista($sql)
+    {
+        global $conexion;
+        $resultado = $conexion->query($sql);
+
+        if ($resultado === false) {
+            registrarFallaSistema("DB_PROC", "Error al ejecutar procedimiento almacenado con listado.", array(
+                "error" => $conexion->error,
+                "errno" => $conexion->errno,
+                "sql" => resumirConsultaSistema($sql)
+            ));
+            return array();
+        }
+
+        $items = array();
+        if ($resultado instanceof mysqli_result) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $items[] = $fila;
+            }
+            $resultado->free();
+        }
+
+        limpiarResultadosPendientesConexion();
+
+        return $items;
     }
 
     function limpiarCadena($str)

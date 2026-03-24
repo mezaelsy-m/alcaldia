@@ -1,0 +1,12 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO beneficiarios (
+    nacionalidad,
+    cedula,
+    nombre_beneficiario,
+    telefono,
+    id_comunidad,
+    comunidad,
+    fecha_registro,
+    estado
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);

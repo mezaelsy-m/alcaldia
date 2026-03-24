@@ -1,0 +1,17 @@
+Explica: vista consolidada de usuarios con datos de dependencia y control de acceso.
+SQL:
+SELECT id_usuario,
+       usuario,
+       rol,
+       estado,
+       cedula,
+       empleado,
+       nombre_dependencia,
+       intentos_fallidos,
+       bloqueado,
+       password_temporal,
+       fecha_bloqueo,
+       fecha_password_temporal,
+       fecha_actualizacion
+FROM vw_usuarios_estado_acceso
+ORDER BY usuario ASC;

@@ -7,7 +7,7 @@ if (!defined("DB_HOST")) {
 
 if (!defined("DB_NAME")) {
     //Nombre de la base de datos
-    define("DB_NAME", "sala03v2_4");
+    define("DB_NAME", "sala_situacional");
     //define("DB_NAME", "id21721168_gestionsala");
 }
 
@@ -19,7 +19,7 @@ if (!defined("DB_USERNAME")) {
 
 if (!defined("DB_PASSWORD")) {
     //Contraseña del usuario de la base de datos
-    define("DB_PASSWORD", "");
+    define("DB_PASSWORD", "123456789");
     //define("DB_PASSWORD", "Alcaldia@123456");
 }
 

@@ -1,0 +1,18 @@
+Explica: unifica ayudas, servicios publicos y seguridad en una sola vista para paneles y reportes.
+SQL:
+SELECT modulo,
+       id_registro,
+       ticket_interno,
+       id_beneficiario,
+       beneficiario,
+       tipo_registro,
+       solicitud,
+       estado_solicitud,
+       codigo_estado_solicitud,
+       fecha_evento,
+       fecha_evento_formateada,
+       usuario_registra,
+       estado
+FROM vw_solicitudes_ciudadanas
+WHERE estado = 1
+ORDER BY fecha_evento DESC, id_registro DESC;

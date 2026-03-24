@@ -1,0 +1,5 @@
+Explica: la tabla bitacora es inmutable; el trigger tr_bitacora_bu_lock bloquea actualizaciones.
+SQL:
+UPDATE bitacora
+SET resumen = ?
+WHERE id_bitacora = ?;

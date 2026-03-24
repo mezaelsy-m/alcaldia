@@ -265,6 +265,31 @@ if (!isset($_SESSION["nombre"])) {
         </div>
 
         <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title"><i class="fas fa-stream mr-2"></i>Casos recientes</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="concepto-casos-recientes" class="list-group list-group-flush">
+                            <div class="list-group-item text-muted">Cargando casos recientes...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title"><i class="fas fa-database mr-2"></i>Respaldo de bitacora</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="concepto-respaldo-bitacora" class="text-muted">Consultando estado del respaldo...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header border-0">

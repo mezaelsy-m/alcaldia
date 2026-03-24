@@ -22,6 +22,26 @@ class Usuarios
         return mysqli_real_escape_string($this->db(), (string) $valor);
     }
 
+    private function sqlNullableString($valor)
+    {
+        if ($valor === null) {
+            return "NULL";
+        }
+
+        $valor = trim((string) $valor);
+        if ($valor === "") {
+            return "NULL";
+        }
+
+        return "'" . $this->esc($valor) . "'";
+    }
+
+    private function sqlNullableInt($valor)
+    {
+        $valor = (int) $valor;
+        return $valor > 0 ? "'" . $valor . "'" : "NULL";
+    }
+
     private function valorHtml($valor)
     {
         return htmlspecialchars((string) $valor, ENT_QUOTES, "UTF-8");
@@ -31,6 +51,29 @@ class Usuarios
     {
         $correo = trim((string) $correo);
         return $correo !== "" && filter_var($correo, FILTER_VALIDATE_EMAIL);
+    }
+
+    private function obtenerIpActual()
+    {
+        return isset($_SERVER["REMOTE_ADDR"]) ? (string) $_SERVER["REMOTE_ADDR"] : "127.0.0.1";
+    }
+
+    private function registrarEventoAutenticacion($accion, $resumen, $detalle, $idUsuario = 0, $idRegistro = "")
+    {
+        $idRegistro = trim((string) $idRegistro);
+        if ($idRegistro === "" && (int) $idUsuario > 0) {
+            $idRegistro = (string) (int) $idUsuario;
+        }
+
+        $sql = "CALL sp_bitacora_registrar_autenticacion("
+            . $this->sqlNullableInt($idUsuario) . ", "
+            . $this->sqlNullableString($idRegistro) . ", "
+            . $this->sqlNullableString(strtoupper(trim((string) $accion))) . ", "
+            . $this->sqlNullableString($detalle !== "" ? $detalle : $resumen) . ", "
+            . $this->sqlNullableString($this->obtenerIpActual())
+            . ")";
+
+        return ejecutarProcedimientoNoResultado($sql);
     }
 
     private function asegurarTablaSeguridadAcceso()
@@ -113,12 +156,8 @@ class Usuarios
     private function reiniciarSeguridadAcceso($idUsuario)
     {
         $idUsuario = (int) $idUsuario;
-        return ejecutarConsulta(
-            "UPDATE usuarios_seguridad_acceso
-             SET intentos_fallidos = 0,
-                 bloqueado = 0,
-                 fecha_bloqueo = NULL
-             WHERE id_usuario = '$idUsuario'"
+        return ejecutarProcedimientoNoResultado(
+            "CALL sp_usuarios_reiniciar_seguridad_acceso('$idUsuario')"
         );
     }
 
@@ -127,10 +166,8 @@ class Usuarios
         $idUsuario = (int) $idUsuario;
         $this->asegurarRegistroSeguridadAcceso($idUsuario);
 
-        if (!ejecutarConsulta(
-            "UPDATE usuarios_seguridad_acceso
-             SET intentos_fallidos = IFNULL(intentos_fallidos, 0) + 1
-             WHERE id_usuario = '$idUsuario'"
+        if (!ejecutarProcedimientoNoResultado(
+            "CALL sp_usuarios_incrementar_intento_fallido('$idUsuario')"
         )) {
             return array("ok" => false, "msg" => "No se pudo registrar el intento fallido.");
         }
@@ -154,11 +191,8 @@ class Usuarios
         $justoBloqueado = false;
 
         if (!$bloqueado && $intentos >= $umbralBloqueo) {
-            if (!ejecutarConsulta(
-                "UPDATE usuarios_seguridad_acceso
-                 SET bloqueado = 1,
-                     fecha_bloqueo = NOW()
-                 WHERE id_usuario = '$idUsuario'"
+            if (!ejecutarProcedimientoNoResultado(
+                "CALL sp_usuarios_marcar_bloqueado('$idUsuario')"
             )) {
                 return array("ok" => false, "msg" => "No se pudo bloquear el usuario tras los intentos fallidos.");
             }
@@ -173,6 +207,24 @@ class Usuarios
             "restantes" => max(0, $umbralBloqueo - $intentos),
             "bloqueado" => $bloqueado,
             "justo_bloqueado" => $justoBloqueado
+        );
+    }
+
+    private function desbloquearSeguridadAcceso($idUsuario, $idUsuarioAdmin = 0, $motivo = "")
+    {
+        $idUsuario = (int) $idUsuario;
+        $idUsuarioAdmin = (int) $idUsuarioAdmin;
+
+        if ($idUsuario <= 0) {
+            return false;
+        }
+
+        return ejecutarProcedimientoNoResultado(
+            "CALL sp_usuarios_desbloquear_manual("
+            . "'" . $idUsuario . "', "
+            . "'" . $idUsuarioAdmin . "', "
+            . $this->sqlNullableString($motivo)
+            . ")"
         );
     }
 
@@ -884,6 +936,13 @@ class Usuarios
             $fila = $this->obtenerUsuarioPorLogin($usuario, true);
             if (!$fila) {
                 $conexion->rollback();
+                $this->registrarEventoAutenticacion(
+                    "LOGIN_FAIL",
+                    "Intento fallido de inicio de sesion",
+                    "Intento fallido para el usuario '" . $usuario . "'. Usuario o contrasena invalida.",
+                    0,
+                    $usuario
+                );
                 return array(
                     "ok" => false,
                     "codigo" => "CREDENCIALES_INVALIDAS",
@@ -900,6 +959,13 @@ class Usuarios
 
             if ((int) $fila["bloqueado"] === 1) {
                 $conexion->commit();
+                $this->registrarEventoAutenticacion(
+                    "LOGIN_FAIL",
+                    "Intento fallido de inicio de sesion",
+                    "Intento de acceso rechazado para el usuario '" . $fila["usuario"] . "' porque la cuenta ya se encuentra bloqueada.",
+                    $idUsuario,
+                    $fila["usuario"]
+                );
                 return array(
                     "ok" => false,
                     "codigo" => "BLOQUEADO",
@@ -920,6 +986,17 @@ class Usuarios
                 $msg = (int) $usuarioSesion["password_temporal"] === 1
                     ? "Acceso autorizado con clave temporal. Cambie su contrasena al iniciar sesion."
                     : "Acceso autorizado.";
+                $detalleLogin = "Inicio de sesion exitoso para el usuario '" . $fila["usuario"] . "'.";
+                if ((int) $usuarioSesion["password_temporal"] === 1) {
+                    $detalleLogin .= " El acceso se realizo con una clave temporal.";
+                }
+                $this->registrarEventoAutenticacion(
+                    "LOGIN_OK",
+                    "Inicio de sesion exitoso",
+                    $detalleLogin,
+                    $idUsuario,
+                    $fila["usuario"]
+                );
 
                 return array(
                     "ok" => true,
@@ -934,8 +1011,28 @@ class Usuarios
             }
 
             $conexion->commit();
+            $detalleIntentoFallido = "Intento fallido para el usuario '" . $fila["usuario"] . "'. Intentos acumulados: " . (int) $resultadoIntento["intentos"] . ".";
+            if (!empty($resultadoIntento["bloqueado"])) {
+                $detalleIntentoFallido .= " La cuenta fue bloqueada automaticamente.";
+            } else {
+                $detalleIntentoFallido .= " Intentos restantes antes del bloqueo: " . (int) $resultadoIntento["restantes"] . ".";
+            }
+            $this->registrarEventoAutenticacion(
+                "LOGIN_FAIL",
+                "Intento fallido de inicio de sesion",
+                $detalleIntentoFallido,
+                $idUsuario,
+                $fila["usuario"]
+            );
 
             if ($resultadoIntento["bloqueado"]) {
+                $this->registrarEventoAutenticacion(
+                    "BLOQUEO_USUARIO",
+                    "Usuario bloqueado por seguridad",
+                    "El usuario '" . $fila["usuario"] . "' fue bloqueado despues de " . (int) $resultadoIntento["intentos"] . " intentos fallidos.",
+                    $idUsuario,
+                    $fila["usuario"]
+                );
                 $resultadoCorreo = $this->notificarBloqueoUsuario($fila);
                 $mensajeBloqueo = "El usuario fue bloqueado por seguridad al superar " . $this->maxIntentosPermitidos . " intentos fallidos. Debe recuperar la contrasena.";
                 if (!$resultadoCorreo["ok"]) {
@@ -958,6 +1055,10 @@ class Usuarios
             );
         } catch (Exception $exception) {
             $conexion->rollback();
+            registrarFallaSistema("AUTH_LOGIN", "No se pudo validar el acceso.", array(
+                "usuario" => $usuario,
+                "error" => $exception->getMessage()
+            ));
             return array(
                 "ok" => false,
                 "codigo" => "ERROR",
@@ -1017,12 +1118,13 @@ class Usuarios
             }
 
             $this->asegurarRegistroSeguridadAcceso($idUsuario);
+            if (!$this->desbloquearSeguridadAcceso($idUsuario, 0, "Recuperacion de clave temporal")) {
+                throw new Exception("No se pudo restablecer el acceso del usuario.");
+            }
+
             if (!ejecutarConsulta(
                 "UPDATE usuarios_seguridad_acceso
-                 SET intentos_fallidos = 0,
-                     bloqueado = 0,
-                     fecha_bloqueo = NULL,
-                     password_temporal = 1,
+                 SET password_temporal = 1,
                      fecha_password_temporal = NOW()
                  WHERE id_usuario = '$idUsuario'"
             )) {
@@ -1041,6 +1143,10 @@ class Usuarios
             );
         } catch (Exception $exception) {
             $conexion->rollback();
+            registrarFallaSistema("AUTH_RECOVERY", "No se pudo procesar la recuperacion de clave.", array(
+                "usuario" => $usuario,
+                "error" => $exception->getMessage()
+            ));
             return array(
                 "ok" => false,
                 "codigo" => "ERROR_RECUPERACION",
@@ -1121,6 +1227,29 @@ class Usuarios
         }
 
         return $permisosSesion;
+    }
+
+    public function registrarCierreSesion($idUsuario, $usuario = "")
+    {
+        $idUsuario = (int) $idUsuario;
+        if ($idUsuario <= 0) {
+            return false;
+        }
+
+        $usuario = trim((string) $usuario);
+        $detalle = "Cierre de sesion del usuario";
+        if ($usuario !== "") {
+            $detalle .= " '" . $usuario . "'";
+        }
+        $detalle .= ".";
+
+        return $this->registrarEventoAutenticacion(
+            "LOGOUT",
+            "Cierre de sesion",
+            $detalle,
+            $idUsuario,
+            $usuario
+        );
     }
 }
 ?>

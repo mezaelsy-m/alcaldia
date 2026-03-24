@@ -1,0 +1,23 @@
+Explica: vista operativa completa de seguridad y emergencia con catalogos y despacho resueltos.
+SQL:
+SELECT id_seguridad,
+       ticket_interno,
+       beneficiario,
+       tipo_seguridad,
+       requiere_ambulancia,
+       tipo_solicitud,
+       estado_solicitud,
+       codigo_estado_solicitud,
+       clase_badge_estado_solicitud,
+       fecha_seguridad,
+       fecha_seguridad_formateada,
+       estado_atencion,
+       ubicacion_evento,
+       referencia_evento,
+       codigo_unidad,
+       placa,
+       nombre_chofer,
+       telefono_chofer
+FROM vw_seguridad_operativa
+WHERE estado = 1
+ORDER BY id_seguridad DESC;

@@ -376,9 +376,9 @@ if (!isset($_SESSION["nombre"])) {
                 </div>
                 <div class="form-row mt-2">
                     <div class="form-group col-md-4">
-                        <label for="id_tipo_seguridad" data-toggle="tooltip" title="Seleccione el tipo de ayuda que aplica a la incidencia.">Tipo de ayuda</label>
-                        <select id="id_tipo_seguridad" name="id_tipo_seguridad" class="form-control" required title="Seleccione el tipo de ayuda principal de la incidencia.">
-                            <option value="">Seleccione el tipo de ayuda</option>
+                        <label for="id_tipo_seguridad" data-toggle="tooltip" title="Seleccione el tipo de seguridad o emergencia que aplica a la incidencia.">Tipo de seguridad</label>
+                        <select id="id_tipo_seguridad" name="id_tipo_seguridad" class="form-control" required title="Seleccione el tipo de seguridad principal de la incidencia.">
+                            <option value="">Seleccione el tipo de seguridad</option>
                         </select>
                     </div>
                     <div class="form-group col-md-4">

@@ -1,0 +1,27 @@
+Explica: consulta un registro puntual por clave primaria y permite listar registros para gestion.
+SQL (detalle por id):
+SELECT id_beneficiario,
+       nacionalidad,
+       cedula,
+       nombre_beneficiario,
+       telefono,
+       id_comunidad,
+       comunidad,
+       fecha_registro,
+       estado
+FROM beneficiarios
+WHERE id_beneficiario = ?;
+
+SQL (listado):
+SELECT id_beneficiario,
+       nacionalidad,
+       cedula,
+       nombre_beneficiario,
+       telefono,
+       id_comunidad,
+       comunidad,
+       fecha_registro,
+       estado
+FROM beneficiarios
+WHERE estado = 1
+ORDER BY id_beneficiario DESC;

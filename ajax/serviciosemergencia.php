@@ -209,7 +209,7 @@ function construirMensajeWhatsappPlantilla($datos, $escenario)
     $lineas[] = "*Resumen de la solicitud*";
     $lineas[] = "- Ticket: *" . ($ticket !== "" ? $ticket : "Sin ticket") . "*";
     if ($tipoSeguridad !== "") {
-        $lineas[] = "- Tipo de ayuda: " . $tipoSeguridad;
+        $lineas[] = "- Tipo de seguridad: " . $tipoSeguridad;
     }
     if ($tipoSolicitud !== "") {
         $lineas[] = "- Tipo de solicitud: " . $tipoSolicitud;

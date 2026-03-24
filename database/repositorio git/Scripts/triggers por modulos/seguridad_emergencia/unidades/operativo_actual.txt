@@ -1,0 +1,25 @@
+Explica: lista el operativo actual de ambulancias con asignacion activa y despacho vigente.
+SQL:
+SELECT id_unidad,
+       codigo_unidad,
+       descripcion,
+       placa,
+       estado_operativo,
+       ubicacion_actual,
+       referencia_actual,
+       prioridad_despacho,
+       id_asignacion_unidad_chofer,
+       id_chofer_ambulancia,
+       numero_licencia,
+       categoria_licencia,
+       vencimiento_licencia,
+       id_empleado,
+       cedula_chofer,
+       nombre_chofer,
+       telefono_chofer,
+       id_despacho_unidad,
+       estado_despacho,
+       fecha_asignacion,
+       ticket_interno
+FROM vw_unidades_operativas_actuales
+ORDER BY prioridad_despacho ASC, id_unidad ASC;

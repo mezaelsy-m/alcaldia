@@ -1,0 +1,3 @@
+Explica: devuelve el resumen operativo consolidado para el escritorio principal.
+SQL:
+CALL sp_dashboard_resumen_general();

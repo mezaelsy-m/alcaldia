@@ -197,6 +197,9 @@ function configurarEventosConfiguracion() {
                 configuracionBitacoraTabla.search($(this).val() || "").draw();
             }
         })
+        .on("change.configuracion", "#filtroBitacoraSistemaScope", function () {
+            recargarBitacoraConfiguracion(true);
+        })
         .on("click.configuracion", ".js-user-state-filter", function () {
             const boton = $(this);
             const contenedor = boton.closest(".config-master-state-filter");
@@ -1186,6 +1189,8 @@ function renderizarResumenUsuariosConfiguracion(resumen) {
         activos: 0,
         inactivos: 0,
         administradores: 0,
+        bloqueados: 0,
+        con_clave_temporal: 0,
         con_acceso_total: 0
     };
 
@@ -1194,6 +1199,8 @@ function renderizarResumenUsuariosConfiguracion(resumen) {
         activos: parseInt(datos.activos, 10) || 0,
         inactivos: parseInt(datos.inactivos, 10) || 0,
         administradores: parseInt(datos.administradores, 10) || 0,
+        bloqueados: parseInt(datos.bloqueados, 10) || 0,
+        conClaveTemporal: parseInt(datos.con_clave_temporal, 10) || 0,
         conAccesoTotal: parseInt(datos.con_acceso_total, 10) || 0
     };
 
@@ -1214,6 +1221,18 @@ function renderizarResumenUsuariosConfiguracion(resumen) {
         '   <article class="config-master-overview-card">' +
         '       <div class="config-master-overview-icon"><i class="fas fa-user-shield"></i></div>' +
         '       <div><p class="eyebrow">Administradores</p><h4>' + configuracionUsuariosResumen.administradores + '</h4><p>Usuarios con rol administrativo.</p></div>' +
+        '   </article>' +
+        '</div>' +
+        '<div class="col-md-6 col-xl-3 mb-3">' +
+        '   <article class="config-master-overview-card">' +
+        '       <div class="config-master-overview-icon"><i class="fas fa-user-lock"></i></div>' +
+        '       <div><p class="eyebrow">Bloqueados</p><h4>' + configuracionUsuariosResumen.bloqueados + '</h4><p>Cuentas bloqueadas por intentos fallidos.</p></div>' +
+        '   </article>' +
+        '</div>' +
+        '<div class="col-md-6 col-xl-3 mb-3">' +
+        '   <article class="config-master-overview-card">' +
+        '       <div class="config-master-overview-icon"><i class="fas fa-envelope-open-text"></i></div>' +
+        '       <div><p class="eyebrow">Clave temporal</p><h4>' + configuracionUsuariosResumen.conClaveTemporal + '</h4><p>Usuarios pendientes por cambiar clave.</p></div>' +
         '   </article>' +
         '</div>' +
         '<div class="col-md-6 col-xl-3 mb-3">' +
@@ -2223,6 +2242,11 @@ function inicializarBitacoraConfiguracion() {
             url: "../ajax/bitacora.php?op=listar",
             type: "GET",
             dataType: "json",
+            data: function () {
+                return {
+                    scope: $("#filtroBitacoraSistemaScope").val() || "sistema"
+                };
+            },
             error: function (xhr) {
                 console.error("Error al cargar bitacora:", xhr.responseText);
                 mostrarAlertaConfiguracion("error", "No se pudo cargar la bitacora.");
@@ -2290,7 +2314,7 @@ function generarReporteBitacoraConfiguracion() {
         ".pie{margin-top:14px;text-align:center;font-size:12px;}" +
         "</style></head><body>" +
         '<h1>Sala Situacional Libertador</h1>' +
-        '<h2>Reporte de Bitacora del Sistema</h2>' +
+        '<h2>Reporte de Bitacora ' + escapeHtmlConfiguracion(($("#filtroBitacoraSistemaScope").val() || "sistema") === "autenticacion" ? 'de Autenticacion' : 'del Sistema') + '</h2>' +
         '<div class="fecha">Fecha: ' + escapeHtmlConfiguracion(new Date().toLocaleDateString("es-VE")) + "</div>" +
         "<table><thead><tr>" +
         "<th>ID</th><th>Usuario</th><th>Resumen</th><th>Detalle</th><th>Fecha y hora</th><th>Direccion IP</th>" +

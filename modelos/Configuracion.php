@@ -2182,6 +2182,29 @@ class Configuracion
 
     private function obtenerDetalleUsuarioBase($idUsuario, $forUpdate = false)
     {
+        if (!$forUpdate) {
+            return ejecutarConsultaSimpleFila(
+                "SELECT id_usuario,
+                        id_empleado,
+                        id_dependencia,
+                        usuario,
+                        rol,
+                        estado,
+                        cedula,
+                        empleado,
+                        nombre_dependencia,
+                        intentos_fallidos,
+                        bloqueado,
+                        password_temporal,
+                        fecha_bloqueo,
+                        fecha_password_temporal,
+                        fecha_actualizacion
+                 FROM vw_usuarios_estado_acceso
+                 WHERE id_usuario = '" . (int) $idUsuario . "'
+                 LIMIT 1"
+            );
+        }
+
         $sql = "SELECT u.id_usuario,
                        u.id_empleado,
                        e.id_dependencia,
@@ -2334,6 +2357,17 @@ class Configuracion
         $row["estado_texto"] = $row["estado"] === 1 ? "Activo" : "Inactivo";
         $row["estado_badge"] = $row["estado"] === 1 ? "active" : "inactive";
         $row["rol"] = strtoupper((string) $row["rol"]);
+        $row["intentos_fallidos"] = isset($row["intentos_fallidos"]) ? (int) $row["intentos_fallidos"] : 0;
+        $row["bloqueado"] = isset($row["bloqueado"]) ? (int) $row["bloqueado"] : 0;
+        $row["password_temporal"] = isset($row["password_temporal"]) ? (int) $row["password_temporal"] : 0;
+        $row["fecha_bloqueo"] = isset($row["fecha_bloqueo"]) ? (string) $row["fecha_bloqueo"] : "";
+        $row["fecha_password_temporal"] = isset($row["fecha_password_temporal"]) ? (string) $row["fecha_password_temporal"] : "";
+        $row["estado_acceso_texto"] = $row["bloqueado"] === 1
+            ? "Bloqueado"
+            : ($row["password_temporal"] === 1 ? "Clave temporal" : "Normal");
+        $row["estado_acceso_badge"] = $row["bloqueado"] === 1
+            ? "inactive"
+            : ($row["password_temporal"] === 1 ? "info" : "active");
         $row["rol_texto"] = ucfirst(strtolower($row["rol"]));
         $row["empleado"] = trim((string) $row["empleado"]);
         $row["empleado_label"] = trim($row["cedula"] . " - " . $row["empleado"]);
@@ -2468,25 +2502,29 @@ class Configuracion
     {
         $where = "";
         if ($estadoFiltro === "activos") {
-            $where = "WHERE u.estado = 1";
+            $where = "WHERE estado = 1";
         } elseif ($estadoFiltro === "inactivos") {
-            $where = "WHERE u.estado = 0";
+            $where = "WHERE estado = 0";
         }
 
-        $sql = "SELECT u.id_usuario,
-                       u.id_empleado,
-                       e.id_dependencia,
-                       u.usuario,
-                       u.rol,
-                       u.estado,
-                       e.cedula,
-                       TRIM(CONCAT(COALESCE(e.nombre, ''), ' ', COALESCE(e.apellido, ''))) AS empleado,
-                       d.nombre_dependencia
-                FROM usuarios u
-                INNER JOIN empleados e ON e.id_empleado = u.id_empleado
-                LEFT JOIN dependencias d ON d.id_dependencia = e.id_dependencia
+        $sql = "SELECT id_usuario,
+                       id_empleado,
+                       id_dependencia,
+                       usuario,
+                       rol,
+                       estado,
+                       cedula,
+                       empleado,
+                       nombre_dependencia,
+                       intentos_fallidos,
+                       bloqueado,
+                       password_temporal,
+                       fecha_bloqueo,
+                       fecha_password_temporal,
+                       fecha_actualizacion
+                FROM vw_usuarios_estado_acceso
                 " . $where . "
-                ORDER BY u.usuario ASC";
+                ORDER BY usuario ASC";
 
         $rspta = ejecutarConsulta($sql);
         $items = array();
@@ -2502,8 +2540,10 @@ class Configuracion
             "SELECT COUNT(*) AS total,
                     SUM(CASE WHEN estado = 1 THEN 1 ELSE 0 END) AS activos,
                     SUM(CASE WHEN estado = 0 THEN 1 ELSE 0 END) AS inactivos,
-                    SUM(CASE WHEN rol = 'ADMIN' AND estado = 1 THEN 1 ELSE 0 END) AS administradores
-             FROM usuarios"
+                    SUM(CASE WHEN rol = 'ADMIN' AND estado = 1 THEN 1 ELSE 0 END) AS administradores,
+                    SUM(CASE WHEN bloqueado = 1 THEN 1 ELSE 0 END) AS bloqueados,
+                    SUM(CASE WHEN password_temporal = 1 THEN 1 ELSE 0 END) AS con_clave_temporal
+             FROM vw_usuarios_estado_acceso"
         );
         $conAccesoTotal = 0;
         if ((int) $permisoAccesoTotal["id_permiso"] > 0) {
@@ -2525,6 +2565,8 @@ class Configuracion
                 "activos" => isset($resumen["activos"]) ? (int) $resumen["activos"] : 0,
                 "inactivos" => isset($resumen["inactivos"]) ? (int) $resumen["inactivos"] : 0,
                 "administradores" => isset($resumen["administradores"]) ? (int) $resumen["administradores"] : 0,
+                "bloqueados" => isset($resumen["bloqueados"]) ? (int) $resumen["bloqueados"] : 0,
+                "con_clave_temporal" => isset($resumen["con_clave_temporal"]) ? (int) $resumen["con_clave_temporal"] : 0,
                 "con_acceso_total" => $conAccesoTotal
             )
         );

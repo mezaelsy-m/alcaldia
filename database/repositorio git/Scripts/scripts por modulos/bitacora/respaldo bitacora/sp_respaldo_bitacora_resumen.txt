@@ -1,0 +1,3 @@
+Explica: resume el estado del respaldo en la base sala_situacional_respaldo_bitacora.
+SQL:
+CALL sala_situacional_respaldo_bitacora.sp_respaldo_bitacora_resumen();

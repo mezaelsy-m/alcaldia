@@ -467,12 +467,12 @@ class Seguridad_emergencia
     private function obtenerTipoSeguridad($idTipoSeguridad)
     {
         $idTipoSeguridad = (int) $idTipoSeguridad;
-        $sql = "SELECT id_tipo_ayuda_social AS id_tipo_seguridad,
-                       nombre_tipo_ayuda AS nombre_tipo,
+        $sql = "SELECT id_tipo_seguridad,
+                       nombre_tipo AS nombre_tipo,
                        COALESCE(requiere_ambulancia, 0) AS requiere_ambulancia,
                        estado
-                FROM tipos_ayuda_social
-                WHERE id_tipo_ayuda_social = '$idTipoSeguridad'
+                FROM tipos_seguridad_emergencia
+                WHERE id_tipo_seguridad = '$idTipoSeguridad'
                 LIMIT 1";
 
         return ejecutarConsultaSimpleFila($sql);
@@ -496,10 +496,10 @@ class Seguridad_emergencia
         $idSeguridad = (int) $idSeguridad;
         $columnas = $this->obtenerListaColumnasSelect("seguridad", "s");
         $sql = "SELECT " . $columnas . ",
-                       COALESCE(tas.requiere_ambulancia, 0) AS requiere_ambulancia
+                       COALESCE(tse.requiere_ambulancia, 0) AS requiere_ambulancia
                 FROM seguridad AS s
-                LEFT JOIN tipos_ayuda_social AS tas
-                    ON tas.id_tipo_ayuda_social = s.id_tipo_seguridad
+                LEFT JOIN tipos_seguridad_emergencia AS tse
+                    ON tse.id_tipo_seguridad = s.id_tipo_seguridad
                 WHERE s.id_seguridad = '$idSeguridad'
                 LIMIT 1";
 
@@ -807,7 +807,7 @@ class Seguridad_emergencia
                        s.descripcion,
                        s.fecha_seguridad,
                        DATE_FORMAT(s.fecha_seguridad, '%d/%m/%Y %h:%i %p') AS fecha_seguridad_formateada,
-                       COALESCE(tas.nombre_tipo_ayuda, s.tipo_seguridad) AS tipo_seguridad,
+                       COALESCE(tse.nombre_tipo, s.tipo_seguridad) AS tipo_seguridad,
                        COALESCE(sg.nombre_solicitud, s.tipo_solicitud) AS tipo_solicitud,
                        b.nacionalidad,
                        b.cedula,
@@ -848,8 +848,8 @@ class Seguridad_emergencia
                        rt.km_salida,
                        rt.km_llegada
                 FROM seguridad AS s
-                LEFT JOIN tipos_ayuda_social AS tas
-                    ON tas.id_tipo_ayuda_social = s.id_tipo_seguridad
+                LEFT JOIN tipos_seguridad_emergencia AS tse
+                    ON tse.id_tipo_seguridad = s.id_tipo_seguridad
                 LEFT JOIN solicitudes_generales AS sg
                     ON sg.id_solicitud_general = s.id_solicitud_seguridad
                 LEFT JOIN beneficiarios AS b
@@ -958,7 +958,7 @@ class Seguridad_emergencia
         $html .= '<p><strong>Ticket:</strong> ' . $this->valorHtml($ticket !== "" ? $ticket : "Sin ticket") . ' | <strong>Fecha de emision:</strong> ' . $this->valorHtml($fechaEmision) . '</p>';
         $html .= '</header><section class="content">';
         $html .= '<div class="section-title">Datos de la solicitud</div><div class="grid">';
-        $html .= '<div class="card"><span class="label">Tipo de ayuda</span><span class="value">' . $this->valorHtml(isset($datos["tipo_seguridad"]) ? $datos["tipo_seguridad"] : "") . '</span></div>';
+        $html .= '<div class="card"><span class="label">Tipo de seguridad</span><span class="value">' . $this->valorHtml(isset($datos["tipo_seguridad"]) ? $datos["tipo_seguridad"] : "") . '</span></div>';
         $html .= '<div class="card"><span class="label">Tipo de solicitud</span><span class="value">' . $this->valorHtml(isset($datos["tipo_solicitud"]) ? $datos["tipo_solicitud"] : "") . '</span></div>';
         $html .= '<div class="card"><span class="label">Fecha de solicitud</span><span class="value">' . $this->valorHtml($fechaSolicitud !== "" ? $fechaSolicitud : "No disponible") . '</span></div>';
         $html .= '<div class="card"><span class="label">Estado operativo</span><span class="value">' . $this->valorHtml(isset($datos["estado_atencion"]) ? $datos["estado_atencion"] : "") . '</span></div>';
@@ -1722,7 +1722,7 @@ class Seguridad_emergencia
 
         $tipo = $this->obtenerTipoSeguridad($idTipoSeguridad);
         if (!$tipo || (int) $tipo["estado"] !== 1) {
-            return array("ok" => false, "msg" => "Debe seleccionar un tipo de ayuda valido.");
+            return array("ok" => false, "msg" => "Debe seleccionar un tipo de seguridad valido.");
         }
 
         $solicitud = $this->obtenerSolicitudSeguridad($idSolicitudSeguridad);
@@ -2129,7 +2129,7 @@ class Seguridad_emergencia
     {
         $tipo = $this->obtenerTipoSeguridad($idTipoSeguridad);
         if (!$tipo || (int) $tipo["estado"] !== 1) {
-            return array("ok" => false, "msg" => "Tipo de servicio no valido.");
+            return array("ok" => false, "msg" => "Tipo de seguridad no valido.");
         }
 
         if ((int) $tipo["requiere_ambulancia"] !== 1) {
@@ -2826,62 +2826,46 @@ class Seguridad_emergencia
                        s.id_tipo_seguridad,
                        s.id_solicitud_seguridad,
                        s.id_estado_solicitud,
-                       COALESCE(tas.nombre_tipo_ayuda, s.tipo_seguridad) AS tipo_seguridad,
-                       COALESCE(sg.nombre_solicitud, s.tipo_solicitud) AS tipo_solicitud,
-                       COALESCE(es.nombre_estado, 'Registrada') AS estado_solicitud,
-                       COALESCE(es.codigo_estado, 'REGISTRADA') AS codigo_estado_solicitud,
-                       COALESCE(es.clase_badge, 'draft') AS clase_badge_estado_solicitud,
-                       COALESCE(es.es_atendida, 0) AS es_atendida,
-                       COALESCE(tas.requiere_ambulancia, 0) AS requiere_ambulancia,
+                       s.tipo_seguridad,
+                       s.tipo_solicitud,
+                       s.estado_solicitud,
+                       s.codigo_estado_solicitud,
+                       s.clase_badge_estado_solicitud,
+                       s.es_atendida,
+                       s.requiere_ambulancia,
                        s.fecha_seguridad,
-                       DATE_FORMAT(s.fecha_seguridad, '%Y-%m-%dT%H:%i') AS fecha_seguridad_input,
-                       DATE_FORMAT(s.fecha_seguridad, '%d/%m/%Y %h:%i %p') AS fecha_seguridad_formateada,
+                       s.fecha_seguridad_input,
+                       s.fecha_seguridad_formateada,
                        s.descripcion,
                        s.estado,
                        s.estado_atencion,
                        s.ubicacion_evento,
                        s.referencia_evento,
-                       b.nacionalidad,
-                       b.cedula,
-                       b.nombre_beneficiario,
-                       b.telefono,
-                       CONCAT(b.nacionalidad, '-', b.cedula, ' ', b.nombre_beneficiario) AS beneficiario,
-                       du.id_despacho_unidad,
-                       du.estado_despacho,
-                       du.fecha_asignacion,
-                       u.id_unidad,
-                       u.codigo_unidad,
-                       u.descripcion AS descripcion_unidad,
-                       u.placa,
-                       u.ubicacion_actual,
-                       u.referencia_actual,
-                       ca.id_chofer_ambulancia,
-                       ca.numero_licencia,
-                       ca.categoria_licencia,
-                       ca.vencimiento_licencia,
-                       e.id_empleado,
-                       e.cedula AS cedula_chofer,
-                       CONCAT(e.nombre, ' ', e.apellido) AS nombre_chofer,
-                       e.telefono AS telefono_chofer,
-                       e.correo AS correo_chofer
+                       s.nacionalidad,
+                       s.cedula,
+                       s.nombre_beneficiario,
+                       s.telefono,
+                       s.beneficiario,
+                       s.id_despacho_unidad,
+                       s.estado_despacho,
+                       s.fecha_asignacion,
+                       s.id_unidad,
+                       s.codigo_unidad,
+                       s.descripcion_unidad,
+                       s.placa,
+                       s.ubicacion_actual,
+                       s.referencia_actual,
+                       s.id_chofer_ambulancia,
+                       s.numero_licencia,
+                       s.categoria_licencia,
+                       s.vencimiento_licencia,
+                       s.id_empleado,
+                       s.cedula_chofer,
+                       s.nombre_chofer,
+                       s.telefono_chofer,
+                       s.correo_chofer
                        $selectReporte
-                FROM seguridad AS s
-                LEFT JOIN tipos_ayuda_social AS tas
-                    ON tas.id_tipo_ayuda_social = s.id_tipo_seguridad
-                LEFT JOIN solicitudes_generales AS sg
-                    ON sg.id_solicitud_general = s.id_solicitud_seguridad
-                LEFT JOIN estados_solicitudes AS es
-                    ON es.id_estado_solicitud = s.id_estado_solicitud
-                LEFT JOIN beneficiarios AS b
-                    ON b.id_beneficiario = s.id_beneficiario
-                LEFT JOIN " . $this->ultimoDespachoSubquery() . " AS du
-                    ON du.id_seguridad = s.id_seguridad
-                LEFT JOIN unidades AS u
-                    ON u.id_unidad = du.id_unidad
-                LEFT JOIN choferes_ambulancia AS ca
-                    ON ca.id_chofer_ambulancia = du.id_chofer_ambulancia
-                LEFT JOIN empleados AS e
-                    ON e.id_empleado = ca.id_empleado
+                FROM vw_seguridad_operativa AS s
                 $joinReporte
                 WHERE s.id_seguridad = '$idSeguridad'
                 LIMIT 1";
@@ -2927,52 +2911,36 @@ class Seguridad_emergencia
                        s.estado,
                        s.estado_atencion,
                        s.id_estado_solicitud,
-                       COALESCE(tas.nombre_tipo_ayuda, s.tipo_seguridad) AS tipo_seguridad,
-                       COALESCE(tas.requiere_ambulancia, 0) AS requiere_ambulancia,
-                       COALESCE(sg.nombre_solicitud, s.tipo_solicitud) AS tipo_solicitud,
-                       COALESCE(es.nombre_estado, 'Registrada') AS estado_solicitud,
-                       COALESCE(es.codigo_estado, 'REGISTRADA') AS codigo_estado_solicitud,
-                       COALESCE(es.clase_badge, 'draft') AS clase_badge_estado_solicitud,
-                       COALESCE(es.es_atendida, 0) AS es_atendida,
+                       s.tipo_seguridad,
+                       s.requiere_ambulancia,
+                       s.tipo_solicitud,
+                       s.estado_solicitud,
+                       s.codigo_estado_solicitud,
+                       s.clase_badge_estado_solicitud,
+                       s.es_atendida,
                        s.fecha_seguridad,
-                       DATE_FORMAT(s.fecha_seguridad, '%d/%m/%Y %h:%i %p') AS fecha_seguridad_formateada,
+                       s.fecha_seguridad_formateada,
                        s.descripcion,
                        s.ubicacion_evento,
                        s.referencia_evento,
-                       b.nacionalidad,
-                       b.cedula,
-                       b.nombre_beneficiario,
-                       b.telefono,
-                       du.id_despacho_unidad,
-                       du.estado_despacho,
-                       du.modo_asignacion,
-                       du.fecha_asignacion,
-                       u.codigo_unidad,
-                       u.descripcion AS descripcion_unidad,
-                       u.placa,
-                       u.ubicacion_actual,
-                       u.referencia_actual,
-                       ca.numero_licencia,
-                       e.cedula AS cedula_chofer,
-                       CONCAT(e.nombre, ' ', e.apellido) AS nombre_chofer
+                       s.nacionalidad,
+                       s.cedula,
+                       s.nombre_beneficiario,
+                       s.telefono,
+                       s.id_despacho_unidad,
+                       s.estado_despacho,
+                       s.modo_asignacion,
+                       s.fecha_asignacion,
+                       s.codigo_unidad,
+                       s.descripcion_unidad,
+                       s.placa,
+                       s.ubicacion_actual,
+                       s.referencia_actual,
+                       s.numero_licencia,
+                       s.cedula_chofer,
+                       s.nombre_chofer
                        $selectReporte
-                FROM seguridad AS s
-                LEFT JOIN tipos_ayuda_social AS tas
-                    ON tas.id_tipo_ayuda_social = s.id_tipo_seguridad
-                LEFT JOIN solicitudes_generales AS sg
-                    ON sg.id_solicitud_general = s.id_solicitud_seguridad
-                LEFT JOIN estados_solicitudes AS es
-                    ON es.id_estado_solicitud = s.id_estado_solicitud
-                LEFT JOIN beneficiarios AS b
-                    ON b.id_beneficiario = s.id_beneficiario
-                LEFT JOIN " . $this->ultimoDespachoSubquery() . " AS du
-                    ON du.id_seguridad = s.id_seguridad
-                LEFT JOIN unidades AS u
-                    ON u.id_unidad = du.id_unidad
-                LEFT JOIN choferes_ambulancia AS ca
-                    ON ca.id_chofer_ambulancia = du.id_chofer_ambulancia
-                LEFT JOIN empleados AS e
-                    ON e.id_empleado = ca.id_empleado
+                FROM vw_seguridad_operativa AS s
                 $joinReporte
                 WHERE s.estado = 1
                 ORDER BY s.id_seguridad DESC";
@@ -2991,7 +2959,7 @@ class Seguridad_emergencia
                         FROM unidades
                         WHERE estado = 1
                           AND estado_operativo = 'DISPONIBLE') AS unidades_disponibles
-                FROM seguridad AS s
+                FROM vw_seguridad_operativa AS s
                 WHERE s.estado = 1";
 
         return ejecutarConsultaSimpleFila($sql);
@@ -3027,12 +2995,12 @@ class Seguridad_emergencia
 
     public function listarTiposSeguridad()
     {
-        $sql = "SELECT id_tipo_ayuda_social AS id_tipo_seguridad,
-                       nombre_tipo_ayuda AS nombre_tipo,
+        $sql = "SELECT id_tipo_seguridad,
+                       nombre_tipo AS nombre_tipo,
                        COALESCE(requiere_ambulancia, 0) AS requiere_ambulancia
-                FROM tipos_ayuda_social
+                FROM tipos_seguridad_emergencia
                 WHERE estado = 1
-                ORDER BY nombre_tipo_ayuda ASC";
+                ORDER BY nombre_tipo ASC";
 
         return ejecutarConsulta($sql);
     }
@@ -3185,41 +3153,29 @@ class Seguridad_emergencia
 
     public function listarOperativoUnidades()
     {
-        $sql = "SELECT u.id_unidad,
-                       u.codigo_unidad,
-                       u.descripcion,
-                       u.placa,
-                       u.estado_operativo,
-                       u.ubicacion_actual,
-                       u.referencia_actual,
-                       u.prioridad_despacho,
-                       au.id_asignacion_unidad_chofer,
-                       ca.id_chofer_ambulancia,
-                       ca.numero_licencia,
-                       ca.categoria_licencia,
-                       ca.vencimiento_licencia,
-                       e.id_empleado,
-                       e.cedula AS cedula_chofer,
-                       CONCAT(e.nombre, ' ', e.apellido) AS nombre_chofer,
-                       e.telefono AS telefono_chofer,
-                       ds.id_despacho_unidad,
-                       ds.estado_despacho,
-                       ds.fecha_asignacion,
-                       s.ticket_interno
-                FROM unidades AS u
-                LEFT JOIN " . $this->asignacionActivaSubquery() . " AS au
-                    ON au.id_unidad = u.id_unidad
-                LEFT JOIN choferes_ambulancia AS ca
-                    ON ca.id_chofer_ambulancia = au.id_chofer_ambulancia
-                LEFT JOIN empleados AS e
-                    ON e.id_empleado = ca.id_empleado
-                LEFT JOIN despachos_unidades AS ds
-                    ON ds.id_unidad = u.id_unidad
-                   AND ds.estado_despacho = 'ACTIVO'
-                LEFT JOIN seguridad AS s
-                    ON s.id_seguridad = ds.id_seguridad
-                WHERE u.estado = 1
-                ORDER BY u.prioridad_despacho ASC, u.id_unidad ASC";
+        $sql = "SELECT id_unidad,
+                       codigo_unidad,
+                       descripcion,
+                       placa,
+                       estado_operativo,
+                       ubicacion_actual,
+                       referencia_actual,
+                       prioridad_despacho,
+                       id_asignacion_unidad_chofer,
+                       id_chofer_ambulancia,
+                       numero_licencia,
+                       categoria_licencia,
+                       vencimiento_licencia,
+                       id_empleado,
+                       cedula_chofer,
+                       nombre_chofer,
+                       telefono_chofer,
+                       id_despacho_unidad,
+                       estado_despacho,
+                       fecha_asignacion,
+                       ticket_interno
+                FROM vw_unidades_operativas_actuales
+                ORDER BY prioridad_despacho ASC, id_unidad ASC";
 
         return ejecutarConsulta($sql);
     }

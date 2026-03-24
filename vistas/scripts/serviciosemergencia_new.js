@@ -141,7 +141,7 @@ function initSeguridad() {
     if ($("#seguridadEmergenciaView").length) {
         inicializarSelectBeneficiariosSeguridad();
         inicializarComboComunidadesSeguridad();
-        inicializarComboCatalogoSeguridad("#id_tipo_seguridad", "Busque el tipo de ayuda");
+        inicializarComboCatalogoSeguridad("#id_tipo_seguridad", "Busque el tipo de seguridad");
         inicializarComboCatalogoSeguridad("#id_solicitud_seguridad", "Busque el tipo de solicitud");
         cargarCatalogosSeguridad();
         configurarTablaSeguridad();
@@ -362,7 +362,7 @@ function cargarTiposSeguridad(valorSeleccionado) {
     }).done(function (response) {
         const combo = $("#id_tipo_seguridad");
         const items = response && Array.isArray(response.items) ? response.items : [];
-        combo.empty().append('<option value="">Seleccione el tipo de ayuda</option>');
+        combo.empty().append('<option value="">Seleccione el tipo de seguridad</option>');
         for (let i = 0; i < items.length; i += 1) {
             const opcion = new Option(items[i].text, items[i].id);
             $(opcion).attr("data-requiere-ambulancia", String(items[i].requiere_ambulancia || 0));

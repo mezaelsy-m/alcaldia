@@ -1,0 +1,7 @@
+Explica: restablece el acceso de un usuario y registra el evento en bitacora.
+SQL:
+CALL sp_usuarios_desbloquear_manual(
+    ?, -- id_usuario_objetivo
+    ?, -- id_usuario_admin
+    ?  -- motivo
+);

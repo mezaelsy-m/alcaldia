@@ -1,0 +1,39 @@
+Explica: consulta la vista consolidada de usuarios con dependencia, estado e indicadores de acceso.
+SQL (detalle por id):
+SELECT id_usuario,
+       id_empleado,
+       id_dependencia,
+       usuario,
+       cedula,
+       empleado,
+       nombre_dependencia,
+       rol,
+       estado,
+       intentos_fallidos,
+       bloqueado,
+       password_temporal,
+       fecha_bloqueo,
+       fecha_password_temporal,
+       fecha_actualizacion
+FROM vw_usuarios_estado_acceso
+WHERE id_usuario = ?;
+
+SQL (listado):
+SELECT id_usuario,
+       id_empleado,
+       id_dependencia,
+       usuario,
+       cedula,
+       empleado,
+       nombre_dependencia,
+       rol,
+       estado,
+       intentos_fallidos,
+       bloqueado,
+       password_temporal,
+       fecha_bloqueo,
+       fecha_password_temporal,
+       fecha_actualizacion
+FROM vw_usuarios_estado_acceso
+WHERE estado = 1
+ORDER BY usuario ASC;

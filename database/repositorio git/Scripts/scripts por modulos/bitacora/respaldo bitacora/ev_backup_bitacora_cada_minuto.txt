@@ -1,0 +1,3 @@
+Explica: referencia del evento que ejecuta el respaldo automatico cada minuto.
+SQL:
+SHOW CREATE EVENT sala_situacional_respaldo_bitacora.ev_backup_bitacora_cada_minuto;

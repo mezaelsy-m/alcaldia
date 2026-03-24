@@ -1,0 +1,4 @@
+Explica: la tabla bitacora no admite eliminacion logica ni fisica; los triggers tr_bitacora_bu_lock y tr_bitacora_bd_lock la protegen.
+SQL:
+DELETE FROM bitacora
+WHERE id_bitacora = ?;

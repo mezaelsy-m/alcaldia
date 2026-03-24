@@ -1,0 +1,42 @@
+Explica: consulta la bitacora normalizada para interfaz, reportes y eventos de autenticacion.
+SQL (detalle por id):
+SELECT id_bitacora,
+       id_usuario,
+       usuario_login,
+       usuario_nombre,
+       usuario_mostrar,
+       tabla_afectada,
+       accion,
+       origen_evento,
+       id_registro,
+       resumen,
+       detalle,
+       ipaddr,
+       fecha_evento,
+       fecha_evento_formateada,
+       estado
+FROM vw_bitacora_sistema
+WHERE id_bitacora = ?;
+
+SQL (listado sistema):
+SELECT id_bitacora,
+       id_usuario,
+       usuario_login,
+       usuario_nombre,
+       usuario_mostrar,
+       tabla_afectada,
+       accion,
+       origen_evento,
+       id_registro,
+       resumen,
+       detalle,
+       ipaddr,
+       fecha_evento,
+       fecha_evento_formateada,
+       estado
+FROM vw_bitacora_sistema
+WHERE estado = 1
+ORDER BY id_bitacora DESC;
+
+SQL (listado autenticacion con filtros opcionales):
+CALL sp_bitacora_consultar_autenticacion(?, ?, ?, ?);

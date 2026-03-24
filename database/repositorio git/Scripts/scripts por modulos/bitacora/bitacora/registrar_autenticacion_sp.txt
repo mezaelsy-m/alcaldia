@@ -1,0 +1,9 @@
+Explica: registra eventos de autenticacion en bitacora usando el procedimiento especializado.
+SQL:
+CALL sp_bitacora_registrar_autenticacion(
+    ?, -- id_usuario
+    ?, -- usuario o id_registro visible
+    ?, -- accion: LOGIN_OK, LOGIN_FAIL, LOGOUT, BLOQUEO_USUARIO
+    ?, -- detalle
+    ?  -- ipaddr
+);

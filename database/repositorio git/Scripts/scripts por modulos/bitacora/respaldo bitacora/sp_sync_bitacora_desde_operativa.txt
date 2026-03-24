@@ -1,0 +1,3 @@
+Explica: sincroniza manualmente la bitacora operativa hacia la base de respaldo.
+SQL:
+CALL sala_situacional_respaldo_bitacora.sp_sync_bitacora_desde_operativa();

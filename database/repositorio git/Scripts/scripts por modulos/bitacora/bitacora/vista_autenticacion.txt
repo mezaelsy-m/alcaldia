@@ -1,0 +1,20 @@
+Explica: consulta la vista de autenticacion para auditoria de inicio, cierre, fallos y bloqueos.
+SQL (listado rapido):
+SELECT id_bitacora,
+       id_usuario,
+       usuario_login,
+       usuario_nombre,
+       usuario_mostrar,
+       accion,
+       origen_evento,
+       resumen,
+       detalle,
+       ipaddr,
+       fecha_evento,
+       fecha_evento_formateada
+FROM vw_bitacora_autenticacion
+WHERE estado = 1
+ORDER BY id_bitacora DESC;
+
+SQL (filtros opcionales):
+CALL sp_bitacora_consultar_autenticacion(?, ?, ?, ?);

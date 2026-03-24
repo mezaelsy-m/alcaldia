@@ -108,6 +108,11 @@ switch ($op) {
         break;
 
     case "salir":
+        $idUsuarioSesion = isset($_SESSION["idusuario"]) ? (int) $_SESSION["idusuario"] : 0;
+        $usuarioSesion = isset($_SESSION["usuario"]) ? (string) $_SESSION["usuario"] : "";
+        if ($idUsuarioSesion > 0) {
+            $usuarios->registrarCierreSesion($idUsuarioSesion, $usuarioSesion);
+        }
         session_unset();
         session_destroy();
         header("Location: ../index.php");

@@ -1,0 +1,7 @@
+Explica: inserta un nuevo registro con columnas explicitas y parametros preparados.
+SQL:
+INSERT INTO comunidades (
+    nombre_comunidad,
+    estado,
+    fecha_registro
+) VALUES (?, ?, ?);

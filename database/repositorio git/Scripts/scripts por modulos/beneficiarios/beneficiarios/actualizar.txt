@@ -1,0 +1,12 @@
+Explica: actualiza un registro identificado por su clave primaria.
+SQL:
+UPDATE beneficiarios
+SET nacionalidad = ?,
+    cedula = ?,
+    nombre_beneficiario = ?,
+    telefono = ?,
+    id_comunidad = ?,
+    comunidad = ?,
+    fecha_registro = ?,
+    estado = ?
+WHERE id_beneficiario = ?;

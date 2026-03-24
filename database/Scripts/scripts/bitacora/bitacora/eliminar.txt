@@ -1,5 +1,0 @@
-Explica: aplica eliminacion logica desactivando el registro sin borrado fisico.
-SQL:
-UPDATE bitacora
-SET estado = 0
-WHERE id_bitacora = ?;
